@@ -1,0 +1,22 @@
+diff --git a/node_modules/next-auth/lib/client.js b/node_modules/next-auth/lib/client.js
+index 9b8b6c4..edba0cd 100644
+--- a/node_modules/next-auth/lib/client.js
++++ b/node_modules/next-auth/lib/client.js
+@@ -17,7 +17,7 @@ export class ClientSessionError extends AuthError {
+  * @internal
+  */
+ export async function fetchData(path, __NEXTAUTH, logger, req = {}) {
+-    const url = `${apiBaseUrl(__NEXTAUTH)}/${path}`;
++    const url = `${apiBaseUrl(__NEXTAUTH)}/absproxy/3000/${path}`;
+     try {
+         const options = {
+             headers: {
+@@ -76,7 +76,7 @@ export function now() {
+  * @internal
+  */
+ export function parseUrl(url) {
+-    const defaultUrl = new URL("http://localhost:3000/api/auth");
++    const defaultUrl = new URL("http://localhost:3000/absproxy/3000/api/auth");
+     if (url && !url.startsWith("http")) {
+         url = `https://${url}`;
+     }
