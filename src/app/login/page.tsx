@@ -6,7 +6,7 @@ export default function Login() {
     return (
         <div>
             <Logo />
-
+            
             <div className='m-20 '>
                 <p className=' text-4xl font-black text-center mb-10'>로그인</p>
                 <Inputbox type="email" label='이메일'/>

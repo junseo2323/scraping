@@ -7,6 +7,6 @@ export class Db {
       const client = await MongoClient.connect(
         url      
     )
-      return client.db('testDatabase')
+      return client.db('scraping')
     }
   }

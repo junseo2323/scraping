@@ -8,7 +8,12 @@ interface Props {
 const Tag: React.FC<Props> = ({text,color}) => {
     const generateColorStyle:{[key:number]: string} = {
         0 : 'bg-[#A3D3FF]',
-        1 : 'bg-[#FFA3A3]'
+        1 : 'bg-[#FFA3A3]',
+        2 : 'bg-[#8B5FBF]',
+        3 : 'bg-[#FEC0CE]',
+        4 : 'bg-[#2E1F27]',
+        5 : 'bg-[#F4C95D]',
+        6 : 'bg-[#5D5042]'
     }
 
     return(

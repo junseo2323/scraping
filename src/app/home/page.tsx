@@ -1,26 +1,29 @@
-import {MiniArticle} from "@/components/Article";
-import Navigation from "@/components/Navigation";
-import data from "@/../data/testdata.json"
-import Search from "@/components/Search";
+"use client"
+
+import {MiniArticle} from "@/components/Article"
+import Logo from "@/components/Logo"
+import dummydata from "@/../data/testdata.json"
+import useSWR from "swr"
+import axios from 'axios'
+import { useState } from "react"
+
+const fetcher = (url: string) => axios.get(url).then(res => res.data)
+
 export default function home() {
-    const user = data.user
+    const {data: articleData,error: articleError,isLoading: articleisLoading} = useSWR('api/get-article', fetcher)
+    const {data: tagData,error: tagError,isLoading: tagisLoading} = useSWR('api/get-tag', fetcher)
 
     return(
         <div>
-            
-            <Navigation />
-            <div id="main-top" className="grid grid-cols-2 gap-3">
-                <div>
-                    <p className="font-black text-2xl pt-10 pl-10">매일의 나를 남기는 일, 기록</p>
-                    <p className="font-regular text-sm pt-5 pl-10">{user.name}님의 하루를 기록으로 남겨보세요!</p>
-                </div>
-                <div className="pt-10">
-                    <Search />
-                </div>
-            </div>
-            <div id="main-article">
-                <div id="my-article">
-                    <MiniArticle />
+            <Logo />
+            <div id="main-article" className="pl-8 pt-3">
+                <p>나의 기록들</p>
+                <div id="my-article" className="py-5">
+                    {
+                        (!articleisLoading && !tagisLoading) && 
+                        <MiniArticle articleData={articleData[0]} tagData={tagData}  />
+                        
+                    }
                 </div>
             </div>
         </div>
