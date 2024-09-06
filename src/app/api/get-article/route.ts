@@ -1,11 +1,10 @@
 import { Db } from "@/utils/database";
-import { User } from "@/utils/schema";
 
 export async function GET(request: Request) {
     const db = await Db.connect()
 
     try {
-        const data = await db.collection<User>('article').find().toArray()
+        const data = await db.collection('article').find().toArray()
 
         const documents = data;
 

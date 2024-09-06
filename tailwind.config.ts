@@ -14,8 +14,11 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         
       },
+      gridTemplateColumns: {
+        'auto-fit': 'repeat(auto-fit, minmax(150px, 1fr))',
+      },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar-hide")],
 };
 export default config;

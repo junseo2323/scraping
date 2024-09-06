@@ -7,3 +7,8 @@ export interface User {
     subtitle : string,
     article : Array<ObjectId>
 } 
+
+export interface Tag {
+    tagname :string,
+    color : string
+} 

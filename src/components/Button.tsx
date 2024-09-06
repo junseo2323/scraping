@@ -1,12 +1,13 @@
 import React from "react"
 
 interface props {
-    text: string
+    text: string,
+    onClick: () => {}
 }
 
-const Button: React.FC<props> = ({text}) => {
+const Button: React.FC<props> = ({text,onClick}) => {
     return(
-        <button className="my-5 w-44 h-16 rounded-xl bg-[#6083FF] font-black text-3xl text-white">
+        <button onClick={onClick} className="my-5 w-44 h-16 rounded-xl bg-[#6083FF] font-black text-3xl text-white">
             {text}
         </button>
     )

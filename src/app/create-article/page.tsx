@@ -2,6 +2,7 @@
 
 import { Article } from "@/components/Article";
 import Button from "@/components/Button";
+import CreateTag from "@/components/CreateTag";
 import {Inputbox, DefultInputbox} from "@/components/Inputbox";
 import Logo from "@/components/Logo";
 import axios from "axios";
@@ -97,7 +98,7 @@ const Online:React.FC<OnlineTypeProps> = ({setWindowState,setUrl}) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Inputbox type="text" label='URL 입력하기' register={register("url")}/>
                 <div className="float-right mt-32">
-                    <Button text='생성하기'/>
+                    <Button text='생성하기' onClick={() => {return {}}}/>
                 </div>
             </form>
         </div>
@@ -122,6 +123,7 @@ interface OnlineInputTypeProps {
     articleData: {data: articleData}
 }
 type createArticleData = {
+    _id : string,
     url : string,
     image: [{
         url:string
@@ -144,10 +146,11 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
         setWindowState('online-input')
     }
 
-    const {data,error,isLoading} = useSWR('api/get-tag',fetcher)
+    const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher)
 
     const [initaldata,setInitaldata] = useState<createArticleData>(
         {
+            _id: '',
             url : "",
             image: [{url:""}],
             creator: "",
@@ -176,17 +179,26 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
         setValue('title',articleData.data.title)
         setValue('subtitle',articleData.data.subtitle)
         setInitaldata({
+            _id : articleData.data._id,
             url : articleData.data.url,
             image: articleData.data.image,
             creator: "testuser",
             title : articleData.data.title,
             subtitle: articleData.data.subtitle,
             flatform: articleData.data.flatform,
-            tag : [""]
+            tag : ["문화"]
         })
     }
     },[articleData])
     useEffect(()=>{console.log(initaldata)},[initaldata])
+
+    const submit = () => {
+        axios.post('api/post-article',initaldata)
+            .then((res) => {console.log(res)})
+            .catch((error) => {console.error(error)})
+        setWindowState('online')
+        return {}
+    }
     return(
         <div>
             <p className="font-black text-3xl">온라인 기록물 만들기</p>
@@ -195,18 +207,19 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DefultInputbox type="text"  defultValue={initaldata.title ?? ''} label='제목' register={register("title")}/>
                     <DefultInputbox type="text"  defultValue={initaldata.subtitle ?? ''} label='설명' register={register("subtitle")}/>
-
+                    <CreateTag articletag={initaldata.tag} tagdata={data} setInitalData={setInitaldata}/>
                     <div className="float-right mt-32">
-                        <Button text='생성하기'/>
+                        <Button text='생성하기' onClick={submit}/>
                     </div>
                 </form>
 
                 <div className="p-5">
+                
                 {
                     (initaldata&&data) &&
                     <Article 
-                    articleData={initaldata}
-                    tagData={data}
+                        articleData={initaldata}
+                        tagData={data}
                     />
                 }
                 </div>
