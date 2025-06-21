@@ -6,12 +6,16 @@ import dummydata from "@/../data/testdata.json"
 import useSWR from "swr"
 import axios from 'axios'
 import { useEffect, useState } from "react"
+import { useAuth } from "@/context/AuthContext"
 
 const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 export default function home() {
-    const {data: articleData,error: articleError,isLoading: articleisLoading} = useSWR('api/get-article', fetcher)
+    const {user} = useAuth();
+
+    const {data: articleData,error: articleError,isLoading: articleisLoading} = useSWR('api/get-article/'+user?._id, fetcher)
     const {data: tagData,error: tagError,isLoading: tagisLoading} = useSWR('api/get-tag', fetcher)
+    
     useEffect(() => {
         // Fetch data or perform some action here
     }, [articleData]); // Dependency array

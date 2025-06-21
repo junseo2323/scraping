@@ -5,9 +5,9 @@ export async function POST(request: Request) {
 
     try {
         const requestBody = await request.json();
-        const {title,url,image,subtitle,flatform,creator,tag } = requestBody;
+        const {title,url,image,subtitle,flatform,creator,tag,user } = requestBody;
         
-        const result = await db.collection('article').insertOne({ title,url,image,subtitle,flatform,creator,tag });
+        const result = await db.collection('article').insertOne({ title,url,image,subtitle,flatform,creator,tag,user });
 
         return new Response(JSON.stringify({ insertedId: result.insertedId }), {
             headers: { 'Content-Type': 'application/json' },

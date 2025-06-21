@@ -1,11 +1,14 @@
 import { Db } from "@/utils/database";
 
-export async function GET(request: Request) {
+export async function GET(
+    request: Request,
+    { params }: { params: { id: string } }
+    ) {
     const db = await Db.connect()
+    const ids = params.id;
 
     try {
-        const data = await db.collection('article').find().toArray()
-
+        const data = await db.collection('article').find({ user: ids }).toArray()
         const documents = data;
 
         return new Response(JSON.stringify(documents), {

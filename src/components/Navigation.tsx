@@ -8,7 +8,6 @@ import { useAuth } from "@/context/AuthContext"
 
 const Navigation = () => {
     const {user} = useAuth();
-    console.log(user);
     
     const path = usePathname()
     

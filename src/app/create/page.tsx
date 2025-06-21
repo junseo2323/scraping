@@ -5,6 +5,7 @@ import Button from "@/components/Button";
 import CreateTag from "@/components/CreateTag";
 import {Inputbox, DefultInputbox} from "@/components/Inputbox";
 import Logo from "@/components/Logo";
+import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -26,8 +27,7 @@ export default function createArticle(request: Request) {
 
     return(
         <div>
-            <Logo />
-            <div className="px-32">
+            <div className="px-80 pt-10">
                 {   windowState==='select' &&
                     <SelectType setWindowState={setWindowState}/>
                 }
@@ -62,7 +62,7 @@ const SelectType:React.FC<SelectTypeProps> = ({setWindowState}) => {
                 </div>
                 <div className="pt-10">
                     <img src="img/create-article-img/offline.png" className="w-[30vw]"/>
-                    <p className="pt-10 font-bold pt-8 text-3xl text-center">손글씨 기록</p>
+                    <p className=" font-bold pt-8 text-3xl text-center">손글씨 기록</p>
                 </div>
             </div>
         </div>
@@ -132,9 +132,13 @@ type createArticleData = {
     title : string|undefined,
     subtitle: string|undefined,
     flatform: string,
+    user: string,
     tag : [string]
 }
+
 const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}) => {
+    const {user} = useAuth();
+
     const {
         register,
         handleSubmit,
@@ -142,9 +146,7 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
         watch
     } = useForm<Inputs>()
     
-    const onSubmit: SubmitHandler<Inputs> = (data) => {
-        setWindowState('online-input')
-    }
+    
 
     const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher)
 
@@ -157,10 +159,10 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
             title : "",
             subtitle: "",
             flatform: "",
+            user: "",
             tag : [""]
         }
     )
-    const watchedUsername = watch('title');
 
     useEffect(() => {
         const subscirbe = watch((data, { name }) => {
@@ -175,6 +177,7 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
       }, [watch]);
 
     useEffect(()=>{
+    
         if(articleData){
         setValue('title',articleData.data.title)
         setValue('subtitle',articleData.data.subtitle)
@@ -182,23 +185,25 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
             _id : articleData.data._id,
             url : articleData.data.url,
             image: articleData.data.image,
-            creator: "testuser",
+            creator: user?.nickname || '',
             title : articleData.data.title,
             subtitle: articleData.data.subtitle,
             flatform: articleData.data.flatform,
-            tag : ["문화"]
+            user: user?._id || '',
+            tag : [""]
         })
     }
     },[articleData])
-    useEffect(()=>{console.log(initaldata)},[initaldata])
 
-    const submit = () => {
+    useEffect(()=>{console.log(initaldata)},[initaldata])
+    
+    const onSubmit: SubmitHandler<Inputs> = () => {
         axios.post('api/post-article',initaldata)
             .then((res) => {console.log(res)})
             .catch((error) => {console.error(error)})
         setWindowState('online')
-        return {}
     }
+
     return(
         <div>
             <p className="font-black text-3xl">온라인 기록물 만들기</p>
@@ -209,7 +214,11 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
                     <DefultInputbox type="text"  defultValue={initaldata.subtitle ?? ''} label='설명' register={register("subtitle")}/>
                     <CreateTag articletag={initaldata.tag} tagdata={data} setInitalData={setInitaldata}/>
                     <div className="float-right mt-32">
-                        <Button text='생성하기' onClick={submit}/>
+                    <button
+                        type="submit"
+                        className="my-5 w-44 h-16 rounded-xl bg-[#6083FF] font-black text-3xl text-white">
+                    생성하기
+                    </button>
                     </div>
                 </form>
 

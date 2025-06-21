@@ -29,9 +29,9 @@ export async function GET(request: Request) {
     }
 
     // 클라이언트에 보낼 정보만 추려서 반환
-    const { email, nickname, subtitle } = user;
+    const { _id,email, nickname, subtitle } = user;
 
-    return new Response(JSON.stringify({ email, nickname, subtitle }), {
+    return new Response(JSON.stringify({ _id,email, nickname, subtitle }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
