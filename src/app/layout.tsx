@@ -4,7 +4,8 @@ import { Noto_Sans } from 'next/font/google'
 import { Noto_Sans_KR } from 'next/font/google'
 
 import './globals.css'
-import AuthContext from '@/context/AuthContext'
+import {AuthProvider} from '@/context/AuthContext'
+import Navigation from '@/components/Navigation'
 
 const inter = Noto_Sans_KR({ subsets: ['latin'] })
 
@@ -21,9 +22,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className={inter.className}>
-                <AuthContext>
+                <AuthProvider>
+                    <Navigation />
                     {children}
-                </AuthContext>
+                </AuthProvider>
             </body>
         </html>
     )

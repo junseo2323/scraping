@@ -4,11 +4,14 @@ import Link from "next/link"
 import Logo from "./Logo"
 import dummydata from "@/../data/testdata.json"
 import { usePathname } from "next/navigation"
+import { useAuth } from "@/context/AuthContext"
 
 const Navigation = () => {
+    const {user} = useAuth();
+    console.log(user);
+    
     const path = usePathname()
     
-    const user = dummydata.user
     
     return(
         <div className="relative float-left top-0 grid grid-rows-[0.5fr_1fr_3fr] w-60">
@@ -16,8 +19,8 @@ const Navigation = () => {
             <div className="grid grid-cols-[0.5fr_1.5fr] place-items-center pl-8">
                 <div className="rounded-xl bg-gray-300 w-12 h-12" />
                 <div>    
-                    <p className="font-light text-sm">{user.subtitle}</p>
-                    <p className="font-normal text-2xl">{user.name}</p>
+                    <p className="font-light text-sm">{user?.subtitle}</p>
+                    <p className="font-normal text-2xl">{user?.nickname}</p>
                 </div>
             </div>
             <div className="grid grid-rows-5 pl-8">
