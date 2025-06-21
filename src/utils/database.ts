@@ -1,12 +1,12 @@
 import { MongoClient } from "mongodb"
 
-const url = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.0'
+const url = process.env.MONGO_URI;
 
 export class Db {
-    static async connect() {
-      const client = await MongoClient.connect(
-        url      
-    )
-      return client.db('scraping')
-    }
+  static async connect() {
+    const client = await MongoClient.connect(url, {
+      tls: true,  // TLS 연결 강제
+    })
+    return client.db('scraping')  // 'scraping' DB가 없으면 자동으로 생성됨
   }
+}

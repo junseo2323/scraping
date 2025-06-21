@@ -87,8 +87,12 @@ export async function GET(request: NextRequest) {
         image: resdata.ogImage,
         flatform: getFlatform(resdata.ogUrl)
     }})
-    } catch (error) {
+    }catch (error) {
         console.error('Error scraping OG data:', error);
-        return null;
-      }
+        return NextResponse.json({
+            error: 'Failed to scrape the metadata.',
+            message: error.message,
+        }, { status: 500 });
+    }
+
 }
