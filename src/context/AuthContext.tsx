@@ -6,6 +6,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 
 interface AuthContextType {
   login: (email: string, password: string) => void;
+  logout: () => void;
   registerContext: (email:string, password:string, password2:string, nickname: string, subtitle:string) => void;
   user?: User;
 }
@@ -68,9 +69,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
 
   return (
-    <AuthContext.Provider value={{login, registerContext, user}}>
+    <AuthContext.Provider value={{login,logout ,registerContext, user}}>
       {children}
     </AuthContext.Provider>
   );

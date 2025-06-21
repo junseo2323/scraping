@@ -6,6 +6,7 @@ import { Noto_Sans_KR } from 'next/font/google'
 import './globals.css'
 import {AuthProvider} from '@/context/AuthContext'
 import Navigation from '@/components/Navigation'
+import { usePathname } from 'next/navigation'
 
 const inter = Noto_Sans_KR({ subsets: ['latin'] })
 

@@ -7,10 +7,11 @@ import { usePathname } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 
 const Navigation = () => {
-    const {user} = useAuth();
-    
+    const {user,logout} = useAuth();
     const path = usePathname()
-    
+    const hideOn = ["/login", "/register"];
+
+    if (hideOn.includes(path)) return null;
     
     return(
         <div className="relative float-left top-0 grid grid-rows-[0.5fr_1fr_3fr] w-60">
@@ -40,6 +41,10 @@ const Navigation = () => {
                     <img src="img/icons/feed.png" width={32}/>
                     <p className={`text-xl py-0.5` + (path==='/feed' && " text-[#FFAA55] font-bold ")}>피드</p>
                 </Link>
+                <div className="grid grid-cols-[0.5fr_1.5fr]" onClick={logout}>
+                    <img src="img/icons/feed.png" width={32}/>
+                    <p className={`text-xl py-0.5`}>로그아웃</p>
+                </div>
             </div>
         </div>
     )
