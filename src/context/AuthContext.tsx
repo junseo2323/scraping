@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
     setUser(user);
   }
 
+  
   //로그인
   const login = async(email: string, password: string) => {
     try {

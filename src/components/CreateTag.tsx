@@ -68,10 +68,12 @@ interface AddTagProps {
 
 }
 const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
-    const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher)
-    const [tagText, setTagText] = useState<string>()
+    const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher);
+    const [tagText, setTagText] = useState<string>('');
     
-    const enterText = () => {
+    const enterText = async() => {
+        if (!tagText) return;
+
         const createColors = () => {
             
             let randomHex = Math.floor(Math.random() * 0xffffff).toString(16);
@@ -83,24 +85,29 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
             tagname: tagText,
             color: createColors()
         }
-        axios.post('api/post-tag',addData)
-            .then((res) => {
-                mutate('api/get-tag')
-            })
-            .catch((error) =>{console.error(error)})
-        if(tagText) selectTag({tagname:tagText,color:''})
-        setTagText('')
+        try{
+            await axios.post('api/post-tag',addData);
+            mutate();
+            selectTag({tagname:tagText,color:''});
+            setTagText('');    
+        }catch(error){
+            console.error(error);
+        }
     }
     const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if(e.key === "Enter") {
-            enterText()
+            e.preventDefault();
+            enterText();
         }
     }
-    const deleteActive = (tagname:string) => {
-        selectTag({tagname:tagname,color:''})
-        axios.delete('api/delete-tag?tagname='+tagname)
-            .then((res) => {mutate('api/get-tag')})
-            .catch((error) => {console.error(error)})
+    const deleteActive = async(tagname:string) => {
+        selectTag({tagname:tagname,color:''});
+        try{
+            await axios.delete('api/delete-tag?tagname='+tagname);
+            mutate();
+        }catch(error){
+            console.error(error);
+        }
     }
 
     const selectTag = (i:tag) => {
@@ -132,14 +139,20 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
             <p className="text-gray-400 text-sm p-5">태그 선택 또는 생성</p>
             <div className="px-5">
             {
-                data&&data!=='api/get-tag'&&(
+                data && Array.isArray(data) &&(
                     data.map((i: tag)=>(
                         <div className="py-1">
                             <button className="float-right"
-                                onClick={(e:React.MouseEvent<HTMLButtonElement>)=>{if(e.detail === 1){deleteActive(i.tagname)}}}
+                                type="button"
+                                onClick={(e:React.MouseEvent<HTMLButtonElement>)=>{
+                                    e.stopPropagation();
+                                    if(e.detail === 1){
+                                        deleteActive(i.tagname)
+                                    }
+                                }}
                             >삭제</button>
                             <div onClick={()=>{
-                                selectTag(i)
+                                selectTag(i);
                             }}>
                                 <Tag text={i.tagname} color={i.color} />
                             </div>

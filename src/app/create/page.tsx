@@ -223,14 +223,13 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
                 </form>
 
                 <div className="p-5">
-                
                 {
                     (initaldata&&data) &&
                     <Article 
                         articleData={initaldata}
                         tagData={data}
                     />
-                }
+                }        
                 </div>
             </div>
         </div>
@@ -240,6 +239,7 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
 
 /*
  
+
 {data && 
                 <>
                 <p>제목 : {data.data.title}</p>

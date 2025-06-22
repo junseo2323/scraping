@@ -91,7 +91,7 @@ export async function GET(request: NextRequest) {
         console.error('Error scraping OG data:', error);
         return NextResponse.json({
             error: 'Failed to scrape the metadata.',
-            message: error.message,
+            message: error,
         }, { status: 500 });
     }
 

@@ -52,9 +52,11 @@ type tagData = [{
 }]
 
 const Article:React.FC<Articleprops> = ({articleData,tagData}) => {
-    const backgroundImage = articleData.image[0].url
-    const flatformImage = 'img/flatform/'+articleData.flatform+'.png'
-    
+    const backgroundImage = articleData.image[0].url || 'default.png'
+    const flatformImage = `/img/flatform/${articleData.flatform}.png`
+    console.log('flatform:', flatformImage)
+    console.log('backgroundImage:', backgroundImage)
+
     const tagGenerator = () => {
         let resultTag = []
         for (let tmptag of tagData) {
@@ -104,7 +106,7 @@ interface MiniArticleprops {
 
 const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
     const backgroundImage = articleData.image[0].url
-    const flatformImage = 'img/flatform/'+articleData.flatform+'.png'
+    const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
     const tagGenerator = () => {
         let resultTag = []
