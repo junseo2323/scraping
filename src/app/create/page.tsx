@@ -148,7 +148,7 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
     
     
 
-    const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher)
+    const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher)
 
     const [initaldata,setInitaldata] = useState<createArticleData>(
         {

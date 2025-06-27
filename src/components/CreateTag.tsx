@@ -3,6 +3,7 @@ import Tag from "./Tag"
 import axios from "axios"
 import useSWR from "swr"
 import { ObjectId } from "mongodb"
+import { useAuth } from "@/context/AuthContext"
 
 type createArticleData = {
     _id : ObjectId
@@ -68,7 +69,8 @@ interface AddTagProps {
 
 }
 const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
-    const {data,error,isLoading,mutate} = useSWR('api/get-tag',fetcher);
+    const {user} = useAuth();
+    const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher);
     const [tagText, setTagText] = useState<string>('');
     
     const enterText = async() => {
@@ -78,13 +80,15 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
             
             let randomHex = Math.floor(Math.random() * 0xffffff).toString(16);
             randomHex = `#${randomHex.padStart(6,'0')}`;
-    
             return randomHex;
         }
+
         const addData = {
+            userid: user?._id,
             tagname: tagText,
             color: createColors()
         }
+
         try{
             await axios.post('api/post-tag',addData);
             mutate();

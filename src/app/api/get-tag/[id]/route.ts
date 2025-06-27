@@ -1,17 +1,18 @@
 import clientPromise from "@/utils/database";
 import { Tag } from "@/utils/schema";
 
-export async function GET(request: Request) {
+export async function GET(request: Request,
+                        { params }: { params: {id: string } }) {
     const client = await clientPromise;
     const db = client.db('scraping');
+    const ids = params.id;
 
     try {
-        const data = await db.collection<Tag>('tags').find().toArray()
-
+        const data = await db.collection<Tag>('tags').find({userid: ids}).toArray()
         const documents = data;
 
         return new Response(JSON.stringify(documents), {
-            headers: { 'Content-Type': 'Content-Type' },
+            headers: { 'Content-Type': 'application/json' },
         });
 
     } catch (error) {

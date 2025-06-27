@@ -12,6 +12,7 @@ import CreateTag from './CreateTag'
 import useSWR, { mutate } from 'swr';
 import Swal from 'sweetalert2'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import { useAuth } from '@/context/AuthContext'
 
 interface props {
     articleData : articleData,
@@ -47,6 +48,7 @@ interface Articleprops {
 }
 
 type tagData = [{
+    userid: string,
     color: string,
     tagname : string
 }]
@@ -56,7 +58,6 @@ const Article:React.FC<Articleprops> = ({articleData,tagData}) => {
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
     console.log('flatform:', flatformImage)
     console.log('backgroundImage:', backgroundImage)
-
     const tagGenerator = () => {
         let resultTag = []
         for (let tmptag of tagData) {
@@ -109,6 +110,7 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
     const tagGenerator = () => {
+        if(!tagData) return;
         let resultTag = []
         for (let tmptag of tagData) {
             if(articleData.tag.includes(tmptag.tagname)){
@@ -165,10 +167,10 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
                     <p className='font-light break-all text-sm text-gray-400 h-14 overflow-scroll scrollbar-hide'>{articleData.subtitle}</p>
                     <div className='py-2 overflow-scroll scrollbar-hide grid grid-cols-[70px_70px_70px] gap-y-2 h-14'>
                     {
-                            tagList.map((i)=>(
+                            tagList&&tagList.map((i)=>(
                                 <Tag text={i.tagname} color={i.color} />
                             ))
-                        }                    
+                    }                    
                     </div>
                 </div>
                 
@@ -199,7 +201,8 @@ type Inputs = {
 
 
 const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,articleData}) => {
-    const {data} = useSWR('api/get-tag')
+    const {user} = useAuth();
+    const {data} = useSWR('api/get-tag/'+user?._id);
     const [initaldata,setInitalData] = useState(articleData)
     const {register,handleSubmit,watch} = useForm<Inputs>()
     useEffect(() => {

@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     try {
         // Parse the request body
         const requestBody = await request.json();
-        const { tagname, color } = requestBody;
+        const { userid,tagname, color } = requestBody;
 
         // Validate input
         if (!tagname || !color) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         }
 
         // Insert data into the 'tags' collection
-        const result = await db.collection<Tag>('tags').insertOne({ tagname, color });
+        const result = await db.collection<Tag>('tags').insertOne({ userid,tagname, color });
 
         // Return a success response
         return new Response(JSON.stringify({ insertedId: result.insertedId }), {
