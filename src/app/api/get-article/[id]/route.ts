@@ -6,10 +6,10 @@ export async function GET(
     ) {
         const client = await clientPromise;
         const db = client.db('scraping');
-          const ids = params.id;
+        const { id } = params; 
 
     try {
-        const data = await db.collection('article').find({ user: ids }).toArray()
+        const data = await db.collection('article').find({ user: id }).toArray()
         const documents = data;
 
         return new Response(JSON.stringify(documents), {

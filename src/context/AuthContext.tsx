@@ -42,7 +42,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
   const login = async(email: string, password: string) => {
     try {
       const data = await api.post<{ token: string }>("/api/login", { email, password });
-      console.log(data,"로그인성공");
       localStorage.setItem("token", data.token);
 
       const user = await api.get<User>("/api/me"); 

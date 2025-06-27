@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext"
 import { fetcher } from "@/utils/api"
 
 type createArticleData = {
-    _id : ObjectId
+    _id : string,
     url : string,
     image: [{
         url:string
@@ -16,11 +16,12 @@ type createArticleData = {
     title : string|undefined,
     subtitle: string|undefined,
     flatform: string,
+    user: string,
     tag : string[]
 }
 
 interface CreateTagProps {
-    articletag : [string],
+    articletag : string[],
     tagdata : [tag],
     setInitalData : React.Dispatch<React.SetStateAction<createArticleData>>
 }
@@ -63,7 +64,7 @@ const CreateTag:React.FC<CreateTagProps> = ({articletag,tagdata,setInitalData}) 
 }
 
 interface AddTagProps {
-    articletag : [string],
+    articletag : string[],
     setInitalData : React.Dispatch<React.SetStateAction<createArticleData>>
 
 }
@@ -144,7 +145,7 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
             {
                 data && Array.isArray(data) &&(
                     data.map((i: tag)=>(
-                        <div className="py-1">
+                        <div key={i.tagname} className="py-1">
                             <button className="float-right"
                                 type="button"
                                 onClick={(e:React.MouseEvent<HTMLButtonElement>)=>{

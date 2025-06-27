@@ -5,10 +5,10 @@ export async function GET(request: Request,
                         { params }: { params: {id: string } }) {
     const client = await clientPromise;
     const db = client.db('scraping');
-    const ids = params.id;
+    const { id } = params;
 
     try {
-        const data = await db.collection<Tag>('tags').find({userid: ids}).toArray()
+        const data = await db.collection<Tag>('tags').find({userid: id}).toArray()
         const documents = data;
 
         return new Response(JSON.stringify(documents), {

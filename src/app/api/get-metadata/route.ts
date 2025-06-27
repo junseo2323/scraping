@@ -111,7 +111,7 @@ export async function GET(request: NextRequest) {
                     ogImage: data.thumbnails.medium.url
                }
             }catch(error){
-                console.log(error);
+                console.error(error);
             }
             
         }else{

@@ -4,16 +4,16 @@ export async function GET(
     request: Request,
     { params }: { params: {tag:string, id: string } }
     ) {
+        const { id, tag } = await params;
+
         const client = await clientPromise;
         const db = client.db('scraping');
-        const ids = params.id;
-        const tags = params.tag;
 
 
         
     try {
         const data = await db.collection('article')
-                            .find({ user: ids, tag: tags })
+                            .find({ user: id, tag: tag })
                             .toArray()
         const documents = data;
 

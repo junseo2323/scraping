@@ -15,11 +15,6 @@ export const api = {
       headers,
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      throw new Error(errorText || `GET ${url} failed: ${res.status}`);
-    }
-
     return res.json();
   },
 

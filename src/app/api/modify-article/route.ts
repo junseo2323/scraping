@@ -9,7 +9,7 @@ export async function PUT(request: Request) {
     try {
         // Parse the request body
         const requestBody = await request.json();
-        const { _id, title, url, image, subtitle, flatform, creator, tag } = requestBody;
+        const { _id, title, url, image, subtitle, flatform, creator, tag, like, comment } = requestBody;
 
         // Ensure that an ID is provided
         if (!_id) {
@@ -25,6 +25,9 @@ export async function PUT(request: Request) {
         if (flatform) updateData.flatform = flatform;
         if (creator) updateData.creator = creator;
         if (tag) updateData.tag = tag;
+        if (like) updateData.like = like;
+        if (comment) updateData.comment = comment;
+
 
         // Perform the update operation
         const result = await db.collection('article').updateOne(

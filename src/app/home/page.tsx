@@ -66,7 +66,7 @@ export default function home() {
                     <p>태그별 기록들</p>
                     {
                         !tagisLoading && tagData?.map((tag: Tag) => (
-                        <div>
+                        <div key={tag.tagname}>
                             <p className="py-5">{tag.tagname}</p>
                             <div key={tag.tagname} 
                             style={{ maxWidth: '100vw' }}

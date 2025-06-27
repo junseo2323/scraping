@@ -6,59 +6,27 @@ import React, { useEffect, useState } from 'react'
 import Modal from "react-modal"
 
 import axios from 'axios'
-import { ObjectId } from 'mongodb'
 import { DefultInputbox } from './Inputbox'
 import CreateTag from './CreateTag'
 import useSWR, { mutate } from 'swr';
 import Swal from 'sweetalert2'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '@/context/AuthContext'
+import {createArticleData,tagData} from "@/types/type"
 
-interface props {
-    articleData : articleData,
-    tagData : tagData
-}
-
-type articleData = {
-    url : string,
-    creator: string,
-    title : string,
-    subtitle: string,
-    _id : string,
-    flatform: string,
-    tag : [string]
-}
-
-type createArticleData = {
-    _id : string ,
-    url : string,
-    image: [{
-        url:string
-    }],
-    creator: string,
-    title : string | undefined,
-    subtitle: string | undefined,
-    flatform: string,
-    tag : [string]
-}
 
 interface Articleprops {
     articleData : createArticleData,
     tagData : tagData
 }
 
-type tagData = [{
-    userid: string,
-    color: string,
-    tagname : string
-}]
+
 
 const Article:React.FC<Articleprops> = ({articleData,tagData}) => {
-    console.log('whatARticle' ,articleData);
-    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png'
+    const backgroundTmp = articleData.image[0].url || articleData.image || '';
+    const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
-    console.log('flatform:', flatformImage)
-    console.log('backgroundImage:', backgroundImage)
+
     const tagGenerator = () => {
         let resultTag = []
         for (let tmptag of tagData) {
@@ -107,9 +75,10 @@ interface MiniArticleprops {
 }
 
 const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
-    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png';
-    const flatformImage = `/img/flatform/${articleData.flatform}.png`;
-
+    const backgroundTmp = articleData.image[0].url || articleData.image || '';
+    const backgroundImage = String(backgroundTmp)
+    const flatformImage = `/img/flatform/${articleData.flatform}.png`
+    
     const tagGenerator = () => {
         if(!tagData) return;
         let resultTag = []
@@ -169,7 +138,7 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
                     <div className='py-2 overflow-scroll scrollbar-hide grid grid-cols-[70px_70px_70px] gap-y-2 h-14'>
                     {
                             tagList&&tagList.map((i)=>(
-                                <Tag text={i.tagname} color={i.color} />
+                                <Tag key={i.tagname} text={i.tagname} color={i.color} />
                             ))
                     }                    
                     </div>
@@ -191,8 +160,10 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
 interface FeedArticleprops {
     articleData : createArticleData
 }
+
 const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
-    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png'
+    const backgroundTmp = articleData.image[0].url || articleData.image || '';
+    const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
     const [ismordal,setIsmordal] = useState<boolean>(false)
@@ -237,9 +208,6 @@ type Inputs = {
     subtitle : string
 }
 
-
-
-
 const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,articleData}) => {
     const {user} = useAuth();
     const {data} = useSWR('api/get-tag/'+user?._id);
@@ -247,7 +215,6 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
     const {register,handleSubmit,watch} = useForm<Inputs>()
     useEffect(() => {
         const subscirbe = watch((data, { name }) => {
-            console.log(data, name)
             setInitalData((prevState) => ({
                 ...prevState,
                 title : data.title,
@@ -273,7 +240,9 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
             // 만약 Promise리턴을 받으면,
             if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
                axios.put('api/modify-article',initaldata)
-                .then((res) => {console.log(res)})
+                .then((res) => {
+                    
+                })
                 .catch((error) => {console.log(error)})
                Swal.fire('수정이 완료되었습니다.', '수정된 기록을 확인하세요!', 'success');
                mutate('api/get-article')
@@ -289,8 +258,8 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
                 <Modal isOpen={ismordal} className='m-auto mt-36 pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[500px] h-[700px] bg-white'>
                     <p className='font-bold text-3xl'>수정하기</p>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <DefultInputbox type='text' label='제목' defultValue={articleData.title} register={register('title')}/>
-                        <DefultInputbox type='text' label='설명' defultValue={articleData.subtitle} register={register('subtitle')}/>
+                        <DefultInputbox type='text' label='제목' defultValue={articleData.title || ''} register={register('title')}/>
+                        <DefultInputbox type='text' label='설명' defultValue={articleData.subtitle || ''} register={register('subtitle')}/>
                         <CreateTag articletag={initaldata.tag} tagdata={data} setInitalData={setInitalData}/>
                         <button className='float-left text-lg'>수정</button>
                     </form>
@@ -300,6 +269,5 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
         </div>
     )
 }
-
 
 export  {Article,MiniArticle,FeedArticle}
