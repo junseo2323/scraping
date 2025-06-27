@@ -1,5 +1,7 @@
 // utils/api.ts
 
+import axios from "axios";
+
 export const api = {
   async get<T = any>(url: string): Promise<T> {
     const token = localStorage.getItem("token");
@@ -83,3 +85,6 @@ export const api = {
     return res.json();
   },
 };
+
+export const fetcher = (url: string) => axios.get(url)
+                                              .then(res => res.data);

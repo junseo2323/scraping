@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import Logo from "./Logo"
-import dummydata from "@/../data/testdata.json"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/context/AuthContext"
 import { useState } from "react"
@@ -57,12 +56,8 @@ const Navigation = () => {
                             <img src="/img/icons/create.png" width={32}/>
                             <p className={`text-xl py-0.5` + (path==='/create' && " text-[#FFAA55] font-bold ")}>기록하기</p>
                         </Link>
-                        <Link href='/category' className="grid grid-cols-[0.5fr_1.5fr]">
-                            <img src="/img/icons/category.png" width={32}/>
-                            <p className={`text-xl py-0.5` + (path==='/category' && " text-[#FFAA55] font-bold ")}>주제별 보기</p>
-                        </Link>
                         <Link href='/feed' className="grid grid-cols-[0.5fr_1.5fr]">
-                            <img src="/img/icons/feed.png" width={32}/>
+                            <img src="/img/icons/category.png" width={32}/>
                             <p className={`text-xl py-0.5` + (path==='/feed' && " text-[#FFAA55] font-bold ")}>피드</p>
                         </Link>
                         <div className="grid grid-cols-[0.5fr_1.5fr]" onClick={logout}>

@@ -4,6 +4,7 @@ import Button from '@/components/Button';
 import { Inputbox } from '@/components/Inputbox';
 import Logo from '@/components/Logo';
 import { useAuth } from '@/context/AuthContext';
+import Link from 'next/link';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type LoginFormInputs = {
@@ -35,6 +36,7 @@ export default function Login() {
                         type="password"
                         label="비밀번호"
                     />
+                    <Link href="/register"><p>아이디가 없다면? 회원가입</p></Link>
                     <div className='mt-24 grid grid-cols-1 place-items-end'>
                         <button
                             type="submit"

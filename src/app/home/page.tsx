@@ -8,8 +8,8 @@ import axios from 'axios'
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import {Tag} from "@/utils/schema"
+import { fetcher } from "@/utils/api"
 
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 const fetchArticle = (id: string, tag: string) => {
     const res = fetcher('api/get-article/'+id+"/"+tag);
@@ -33,7 +33,7 @@ export default function home() {
             const res = await fetchArticle(user?._id,tagname);
             setTagArticlesMap(prev => ({ ...prev, [tagname]: res }));
         }catch(err) {
-            return(<div>에러</div>);
+            console.error('에러발생');
         }finally {
             setLoadingTags(prev => ({ ...prev, [tagname]: false }));
         }

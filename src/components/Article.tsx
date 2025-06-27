@@ -186,6 +186,45 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
     )
 }
 
+
+interface FeedArticleprops {
+    articleData : createArticleData
+}
+const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
+    const backgroundImage = articleData.image[0].url
+    const flatformImage = `/img/flatform/${articleData.flatform}.png`
+
+    const [ismordal,setIsmordal] = useState<boolean>(false)
+
+    return(
+        <div className='relative drop-shadow-xl	bg-white w-60 h-[27rem] rounded-2xl'>
+            <Link href={articleData.url} className='inline-block w-60 '>
+            <div  className='w-60 h-32 place-items-center'>
+                <div className='w-[100%] h-32  overflow-hidden'>
+                    <img referrerPolicy="no-referrer" className='rounded-t-3xl' src={backgroundImage} />
+                </div>               
+                <div className='w-[100%] grid-rows-[0.5fr_1fr_0.5fr_0.5fr] px-3 py-8'>
+                    <div className='grid grid-cols-[1fr_0.5fr_0.5fr] pb-3'>
+                        <img className='py-2' src={flatformImage} width={32}/>
+                        <div className='bg-[#D9D9D9] rounded-full w-10 h-10'/>
+                        <span className='py-2.5 pl-2 text-sm'>{articleData.creator}</span>
+                    </div>
+                    <p className='font-semibold text-xl h-14 overflow-clip'>{articleData.title}</p>
+                    <p className='font-light break-all text-sm text-gray-400 h-14 overflow-scroll scrollbar-hide'>{articleData.subtitle}</p>
+
+                </div>
+                
+                <div className='w-36 top-10 border-b-2 border-black m-auto' ></div>
+            </div>
+            </Link>
+            <div className='absolute bottom-[20px] pl-4'>
+                <button>좋아요</button>
+                <button className='pl-5'>댓글</button>
+            </div>
+        </div>
+    )
+}
+
 interface ModifyArticleType {
     ismordal: boolean,
     setIsmordal: React.Dispatch<React.SetStateAction<boolean>>,
@@ -262,4 +301,4 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
 }
 
 
-export  {Article,MiniArticle}
+export  {Article,MiniArticle,FeedArticle}

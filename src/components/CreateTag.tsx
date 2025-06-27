@@ -4,6 +4,7 @@ import axios from "axios"
 import useSWR from "swr"
 import { ObjectId } from "mongodb"
 import { useAuth } from "@/context/AuthContext"
+import { fetcher } from "@/utils/api"
 
 type createArticleData = {
     _id : ObjectId
@@ -60,8 +61,6 @@ const CreateTag:React.FC<CreateTagProps> = ({articletag,tagdata,setInitalData}) 
         </div>
     )
 }
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
 
 interface AddTagProps {
     articletag : [string],

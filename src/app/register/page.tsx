@@ -5,6 +5,7 @@ import Logo from '@/components/Logo'
 import Button from '@/components/Button'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '@/context/AuthContext'
+import { useRouter } from 'next/navigation';
 
 type RegisterFormInputs = {
     email: string,
@@ -17,9 +18,8 @@ type RegisterFormInputs = {
 export default function Register() {
     const {register,handleSubmit} = useForm<RegisterFormInputs>();
     const {registerContext} = useAuth();
-
+    const router = useRouter();
     const onSubmit:SubmitHandler<RegisterFormInputs> = (data) => {
-        alert("클릭크!")
         registerContext(
             data.email,
             data.password,
@@ -27,6 +27,7 @@ export default function Register() {
             data.nickname,
             data.subtitle,
         );
+        router.push('/login');
     }
 
     return (

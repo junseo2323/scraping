@@ -10,8 +10,8 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import useSWR from "swr";
-
-const fetcher = (url: string) => axios.get(url).then(res => res.data)
+import { fetcher } from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 export default function createArticle(request: Request) {
     const [url,setUrl] = useState<string>("")
@@ -137,6 +137,7 @@ type createArticleData = {
 }
 
 const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}) => {
+    const router = useRouter();
     const {user} = useAuth();
 
     const {
@@ -201,7 +202,8 @@ const OnlineInput:React.FC<OnlineInputTypeProps> = ({setWindowState,articleData}
         axios.post('api/post-article',initaldata)
             .then((res) => {console.log(res)})
             .catch((error) => {console.error(error)})
-        setWindowState('online')
+        setWindowState('online');
+        router.push('/home')
     }
 
     return(
