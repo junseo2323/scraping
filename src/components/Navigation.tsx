@@ -12,7 +12,7 @@ const Navigation = () => {
 
     const {user,logout} = useAuth();
     const path = usePathname()
-    const hideOn = ["/login", "/register"];
+    const hideOn = ["/login", "/register","/start"];
 
     if (hideOn.includes(path)) return null;
     

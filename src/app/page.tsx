@@ -1,11 +1,23 @@
-import Image from 'next/image'
-import Article from '@/components/Article' 
-import Navigation from '@/components/Navigation'
+'use client'
+
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function Home() {
+    const router = useRouter();
+    const {user} = useAuth();
+    useEffect(()=>{
+        if(user){
+            router.push('/home');
+        } else{
+            router.push('/start');
+        }
+    },[user]);
+  
     return (
         <div>
-            <Navigation />
+
         </div>
     )
 }

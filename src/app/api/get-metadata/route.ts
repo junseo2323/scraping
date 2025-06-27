@@ -60,9 +60,33 @@ function encodeKoreanInURL(url : string) {
     return urlObj.toString();
 }
 
+//유튜브 Id추출
+function extractYouTubeVideoId(url: string): string | null {
+    try {
+      const parsedUrl = new URL(url);
+      const hostname = parsedUrl.hostname;
+  
+      // 일반적인 유튜브 링크: https://www.youtube.com/watch?v=VIDEO_ID
+      if (hostname.includes('youtube.com')) {
+        return parsedUrl.searchParams.get('v');
+      }
+  
+      // 단축 링크: https://youtu.be/VIDEO_ID
+      if (hostname.includes('youtu.be')) {
+        return parsedUrl.pathname.slice(1);
+      }
+  
+      return null;
+    } catch (err) {
+      console.error('Invalid URL', err);
+      return null;
+    }
+  }
+
 export async function GET(request: NextRequest) {
     const ogs = require("open-graph-scraper");
     const reqUrl:any = request.nextUrl.searchParams.get("url")
+    const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
     try{
         let resdata;
@@ -72,9 +96,26 @@ export async function GET(request: NextRequest) {
             const {result} = await getNaverBlogStandardURL(htmlBody);
             resdata = result
 
-        } else{
-            const data = await ogs({url: encodeKoreanInURL(reqUrl)})
+        }else if(reqUrl.includes('youtube')){
+            const VIDEO_ID = extractYouTubeVideoId(reqUrl);
+            try{
+                const res = await fetch(
+                    `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${VIDEO_ID}&key=${YOUTUBE_API_KEY}`
+                );
+                const ress = await res.json();
+                const data = ress.items[0].snippet;
+                resdata = {
+                    ogTitle: data.title,
+                    ogDescription: data.description,
+                    ogUrl: reqUrl,
+                    ogImage: data.thumbnails.medium.url
+               }
+            }catch(error){
+                console.log(error);
+            }
             
+        }else{
+            const data = await ogs({url: encodeKoreanInURL(reqUrl)})
             const {result} = data
             resdata = result
         }

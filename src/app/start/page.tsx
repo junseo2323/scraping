@@ -1,6 +1,12 @@
+'use client'
+
+import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Start() {
+    
     return (
         <div className="my-[15vh]">
             <div className="grid grid-cols-1 gap-7 place-items-center">

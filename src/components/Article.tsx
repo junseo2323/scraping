@@ -54,7 +54,8 @@ type tagData = [{
 }]
 
 const Article:React.FC<Articleprops> = ({articleData,tagData}) => {
-    const backgroundImage = articleData.image[0].url || 'default.png'
+    console.log('whatARticle' ,articleData);
+    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png'
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
     console.log('flatform:', flatformImage)
     console.log('backgroundImage:', backgroundImage)
@@ -106,8 +107,8 @@ interface MiniArticleprops {
 }
 
 const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
-    const backgroundImage = articleData.image[0].url
-    const flatformImage = `/img/flatform/${articleData.flatform}.png`
+    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png';
+    const flatformImage = `/img/flatform/${articleData.flatform}.png`;
 
     const tagGenerator = () => {
         if(!tagData) return;
@@ -191,7 +192,7 @@ interface FeedArticleprops {
     articleData : createArticleData
 }
 const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
-    const backgroundImage = articleData.image[0].url
+    const backgroundImage = articleData.image[0].url || articleData.image || 'default.png'
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
     const [ismordal,setIsmordal] = useState<boolean>(false)
