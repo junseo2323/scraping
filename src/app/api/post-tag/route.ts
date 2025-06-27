@@ -1,8 +1,10 @@
-import { Db } from "@/utils/database";
+import clientPromise from "@/utils/database";
+
 import { Tag } from "@/utils/schema";
 
 export async function POST(request: Request) {
-    const db = await Db.connect();
+    const client = await clientPromise;
+  const db = client.db('scraping');
 
     try {
         // Parse the request body

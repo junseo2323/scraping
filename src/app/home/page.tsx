@@ -25,7 +25,15 @@ export default function home() {
         <div className="pt-10">
             <div id="main-article" className="pl-8 pt-3">
                 <p>나의 기록들</p>
-                <div id="my-article" className="py-5 grid grid-cols-auto-fit gap-x-[70px] gap-y-[30px]">
+                <div id="my-article" className="md:hidden py-5 flex gap-x-[70px] overflow-x-auto">
+                    {
+                        (!articleisLoading && !tagisLoading) && 
+                        articleData.map((i: any) => (
+                            <MiniArticle key={i.id} articleData={i} tagData={tagData}  />
+                        ))
+                    }
+                </div>
+                <div id="my-article" className="hidden md:flex py-5 gap-x-[70px] overflow-x-auto">
                     {
                         (!articleisLoading && !tagisLoading) && 
                         articleData.map((i: any) => (

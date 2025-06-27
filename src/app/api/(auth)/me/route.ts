@@ -1,10 +1,12 @@
 // app/api/me/route.ts
-import { Db } from "@/utils/database";
+import clientPromise from "@/utils/database";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";
 
 export async function GET(request: Request) {
-  const db = await Db.connect();
+  const client = await clientPromise;
+  const db = client.db('scraping');
+
 
   try {
     const authHeader = request.headers.get("Authorization");

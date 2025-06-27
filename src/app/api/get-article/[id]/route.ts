@@ -1,11 +1,12 @@
-import { Db } from "@/utils/database";
+import clientPromise from "@/utils/database";
 
 export async function GET(
     request: Request,
     { params }: { params: { id: string } }
     ) {
-    const db = await Db.connect()
-    const ids = params.id;
+        const client = await clientPromise;
+        const db = client.db('scraping');
+          const ids = params.id;
 
     try {
         const data = await db.collection('article').find({ user: ids }).toArray()

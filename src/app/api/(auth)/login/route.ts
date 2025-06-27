@@ -1,10 +1,11 @@
-import { Db } from "@/utils/database";
+import clientPromise from '@/utils/database';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 export async function POST(request: Request) {
-    const db = await Db.connect();
-
+    const client = await clientPromise;
+    const db = client.db('scraping');
+    
     try {
         const { email, password } = await request.json();
 

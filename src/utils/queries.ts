@@ -1,7 +1,9 @@
 import { User } from "./schema";
-import { Db } from "./database"; 
+import clientPromise from "@/utils/database";
+
 
 export async function getUsers(): Promise<User[]> {
-    const db = await Db.connect()
+    const client = await clientPromise;
+    const db = client.db('scraping');
     return db.collection<User>('users').find().toArray()
 } 

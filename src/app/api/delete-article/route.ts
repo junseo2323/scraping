@@ -1,4 +1,4 @@
-import { Db } from "@/utils/database";
+import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 
 interface RequestBody {
@@ -6,8 +6,9 @@ interface RequestBody {
 }
 
 export async function DELETE(request: Request) {
-    const db = await Db.connect();
-
+    const client = await clientPromise;
+    const db = client.db('scraping');
+  
     try {
         // Parse the URL or request body for the tagname
         const requestBody: RequestBody = await request.json();
