@@ -13,7 +13,6 @@ const inter = Noto_Sans_KR({ subsets: ['latin'] })
 export const metadata: Metadata = {
     title: 'Scraping',
     description: '매일의 나를 남기는 일, 기록',
-    viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
 
 }
 

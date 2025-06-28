@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import Modal from "react-modal"
 
 import axios from 'axios'
-import { DefultInputbox } from './Inputbox'
+import { DefultInputbox, Inputbox } from './Inputbox'
 import CreateTag from './CreateTag'
 import useSWR, { mutate } from 'swr';
 import Swal from 'sweetalert2'
@@ -14,6 +14,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '@/context/AuthContext'
 import {createArticleData,tagData} from "@/types/type"
 import { fetcher } from '@/utils/api'
+import Button from './Button'
 
 
 interface Articleprops {
@@ -109,7 +110,9 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
             // 만약 Promise리턴을 받으면,
             if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
                 axios.delete('api/delete-article',{data: {_id: articleData._id}})
-                .then((res) => {console.log(res)})
+                .then((res) => {
+                    
+                })
                 .catch((error) => {console.error(error)})               
                Swal.fire('삭제가 완료되었습니다.', '기록을 확인하세요!', 'success');
                mutate('api/get-article')
@@ -181,18 +184,20 @@ const likeFetcher = async(articleId:string, liker:string) => {
     }
 }
 
+
+
 const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
     const {user} = useAuth();
 
     const [likecount, setLikecount] = useState<number>(0);
     const [comments, setComments] = useState();
+    const [iscommentmordal,setIscommentmordal] = useState<boolean>(false)
 
     const fetchLikesAndComments = async () => {
         try {
           const response = await axios.get(`/api/get-like?articleId=${articleData._id}`);
       
           const data = response.data;
-          console.log("data : ",data );
 
           if (!data) {
             return { likeCount: 0, comments: [] };
@@ -251,8 +256,142 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
             </Link>
             <div className='absolute bottom-[20px] pl-4'>
                 <button onClick={onClickHandle}>좋아요 {likecount}</button>
-                <button className='pl-5'>댓글</button>
+                <button className='pl-5'
+                        onClick={()=>{
+                            setIscommentmordal(true);
+                        }}>댓글</button>
             </div>
+            <CommentArticle 
+                iscommentmordal={iscommentmordal} 
+                setIscommentmordal={setIscommentmordal}
+                articleId={articleData._id}
+                articleTitle={articleData.title || ''}
+                comments={comments}
+                userId={user?._id || ''}
+                likeHandle={likeHandle}
+            />
+        </div>
+    )
+}
+
+interface CommentArticleType {
+    iscommentmordal: boolean,
+    setIscommentmordal: React.Dispatch<React.SetStateAction<boolean>>,
+    articleId: string,
+    articleTitle: string,
+    comments: any,
+    userId: string,
+    likeHandle: any
+
+}
+
+const commentFetcher = async(articleId:string,liker: string , comment:string) => {
+    try{
+        const requestBody = {
+            type: 'comment',
+            articleId: articleId,
+            userId: liker,
+            content: comment
+        };
+        await axios.patch('/api/patch-like',requestBody);
+    }catch(error){
+        console.error(error);
+    }
+}
+
+
+const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscommentmordal,articleId,articleTitle,comments,userId,likeHandle}) => {
+    const [newComment, setNewComment] = useState<string>('');
+    
+    const onClickHandle = async() => {
+        if (!userId) return;  
+        await commentFetcher(articleId,userId, newComment);
+        setNewComment('');
+        likeHandle();
+    }   
+    
+    const [usernames, setUsernames] = useState<Record<string, string>>({});
+
+        useEffect(() => {
+            const fetchUsernames = async () => {
+                const newUsernames: Record<string, string> = {};
+                for (const comment of comments) {
+                    const id = comment.userId;
+                    if (!usernames[id]) {
+                        try {
+                            const res = await axios.get('/api/get-username?userId=' + id);
+                            newUsernames[id] = res.data.username;
+                        } catch (error) {
+                            newUsernames[id] = "존재하지 않는 사용자.";
+                        }
+                    }
+                }
+                setUsernames((prev) => ({ ...prev, ...newUsernames }));
+            };
+
+            if (comments?.length) fetchUsernames();
+        }, [comments]);
+
+    return(
+        <div>
+            <Modal isOpen={iscommentmordal} 
+                    className='m-auto mt-12 pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[80vw] h-[85vh] bg-white'>
+                <p className='pt-5 font-bold text-xl'>[{articleTitle}]</p>
+                <div className='grid grid-cols-[2fr_1fr]'>
+                <div className="relative pt-4 mt-10 w-1/2">
+                    <input
+                        type='text'
+                        className="w-[50vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
+                        value={newComment}
+                        placeholder='댓글'
+                        id='댓글'
+                        name='댓글'
+                        onChange={(e)=>{
+                            setNewComment(e.target.value);
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                onClickHandle();   
+                            }
+                        }}
+                        required
+                    />
+                    <label
+                        htmlFor='댓글'
+                        className="absolute w-[50vw] top-0 left-0 text-gray-300 text-ms text-bold transition-all duration-200  peer-placeholder-shown:top-2 peer-placeholder-shown:left-2 peer-placeholder-shown:text-4xl peer-placeholder-shown:font-semibold peer-placeholder-shown:cursor-text peer-focus:top-0 peer-focus:text-[#FFAA55] peer-focus:text-sm peer-focus:font-normal"
+                    >
+                        댓글
+                    </label>
+                </div>
+    
+                <button
+                    onClick={onClickHandle}
+                    className="my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                    작성하기
+                </button>
+                </div>
+                <div className='h-[55vh] overflow-y-scroll'>
+                {
+                    comments && comments.map((i: any)=>(
+                            <div 
+                                className='grid grid-cols-[2fr_1fr] h-16 mt-3 shadow-sm rounded-md'>
+                                <p
+                                    className='text-lg font-normal ml-2'
+                                >{i.content}</p>
+                                <div>
+                                    <p className='text-sm'>{usernames[i.userId]}</p>
+                                    <div className='grid grid-cols-2 w-20'>
+                                        <button>삭제</button>
+                                        <button>수정</button>
+                                    </div>
+                                </div>
+                            </div>
+                    ))
+                }
+                </div>
+
+                <button onClick={()=>{setIscommentmordal(false)}}>돌아가기</button>
+            </Modal>
         </div>
     )
 }
@@ -303,7 +442,7 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
                 .then((res) => {
                     
                 })
-                .catch((error) => {console.log(error)})
+                .catch((error) => {console.error(error)})
                Swal.fire('수정이 완료되었습니다.', '수정된 기록을 확인하세요!', 'success');
                mutate('api/get-article');
                setIsmordal(false);

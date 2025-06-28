@@ -26,8 +26,6 @@ export async function GET(request: Request) {
             return new Response('Article not found', { status: 404 });
         }
 
-        console.log(article);
-
         return new Response(
             JSON.stringify({
                 liker: article.liker || [],

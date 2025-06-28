@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             {articleId: body.articleId},
             updateQuery
         );
-        console.log(result);
+
         return NextResponse.json({ success: true, modifiedCount: result.modifiedCount });
 
     }catch(error) {

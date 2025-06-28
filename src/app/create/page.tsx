@@ -123,7 +123,6 @@ const OnlineInput: React.FC<OnlineInputTypeProps> = ({ setWindowState, articleDa
 
     useEffect(() => {
         const subscirbe = watch((data, { name }) => {
-            console.log(data, name)
             setInitaldata((prevState) => ({
                 ...prevState,
                 title: data.title,
@@ -153,7 +152,9 @@ const OnlineInput: React.FC<OnlineInputTypeProps> = ({ setWindowState, articleDa
 
     const onSubmit: SubmitHandler<Inputs> = () => {
         axios.post('api/post-article', initaldata)
-            .then((res) => { console.log(res) })
+            .then((res) => { 
+                
+            })
             .catch((error) => { console.error(error) })
         setWindowState('online');
         router.push('/home')
