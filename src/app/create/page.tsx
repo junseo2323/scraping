@@ -29,7 +29,7 @@ export default function createArticle(request: Request) {
 
     return (
         <div>
-            <div className="px-80 pt-10">
+            <div className="px-5 md:px-80 pt-10">
                 {windowState === 'select' && <SelectType setWindowState={setWindowState} />}
                 {windowState === 'online' && <Online setWindowState={setWindowState} setUrl={setUrl} />}
                 {windowState === 'online-input' && <OnlineInput setWindowState={setWindowState} articleData={data} />}
@@ -71,7 +71,10 @@ interface OnlineTypeProps {
     setUrl: (value: any) => void
 }
 
+
+
 const Online: React.FC<OnlineTypeProps> = ({ setWindowState, setUrl }) => {
+
     const { register, handleSubmit } = useForm<Inputs>()
 
     const onSubmit: SubmitHandler<Inputs> = (data) => {

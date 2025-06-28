@@ -31,9 +31,9 @@ const Navigation = () => {
             </div>
 
             <div
-                className={`absolute top-0 left-0 z-50 bg-white h-full shadow-md w-70 transition-transform duration-300 
+                className={`absolute z-10 md:z-0 top-0 left-0 bg-white h-full shadow-md w-70 transition-transform duration-300 
                     ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} 
-                    md:relative md:translate-x-0 md:block`}
+                    md:relative md:translate-x-0 md:block `}
             >
                 <div className="md:hidden">
                     <Logo />

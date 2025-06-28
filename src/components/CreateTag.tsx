@@ -49,7 +49,7 @@ const CreateTag:React.FC<CreateTagProps> = ({articletag,tagdata,setInitalData}) 
     tagList = tagGenerator()
 
     return(
-        <div className="py-10">
+        <div className="pt-3 md:py-10">
             <p className="">태그</p>
             <div className='py-2 grid grid-cols-[70px_70px_70px_70px] gap-y-2'>
                 {

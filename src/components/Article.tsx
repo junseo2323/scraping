@@ -161,13 +161,54 @@ interface FeedArticleprops {
     articleData : createArticleData
 }
 
+
+type Comment = {
+    userid: string;  // User who commented
+    text: string;    // Comment text
+};
+
+const likeFetcher = async(articleId:string, liker:string) => {
+    try{
+        const requestBody = {
+            _id: articleId,
+            liker: liker
+        };
+        await axios.put('/api/patch-like',requestBody);
+    }catch(error){
+        console.error(error);
+    }
+}
+
 const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
+    const {user} = useAuth();
+
+    const [likecount, setLikecount] = useState<number>(0);
+    const [comments, setComments] = useState();
+
+    const {data} = useSWR('/api/get-like?'+'articleId='+articleData._id);
+
     const backgroundTmp = articleData.image[0].url || articleData.image || '';
     const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
-    const [ismordal,setIsmordal] = useState<boolean>(false)
+    // 좋아요 처리 함수
+    const likeHandle = () => {
+        if (data) {
+            setLikecount(data.liker.length);  // 좋아요 수 업데이트
+            setComments(data.comment || []);  // 댓글 업데이트
+        }
+    }
 
+    // 클릭 시 좋아요를 업데이트하는 함수
+    const onClickHandle = () => {
+        if (!user?._id) return;  // 사용자가 로그인하지 않으면 처리하지 않음
+        likeFetcher(articleData._id, user._id);  // 좋아요 업데이트 요청
+    }
+
+    useEffect(()=>{
+        likeHandle();
+    },[])
+    
     return(
         <div className='relative drop-shadow-xl	bg-white w-60 h-[27rem] rounded-2xl'>
             <Link href={articleData.url} className='inline-block w-60 '>
@@ -190,7 +231,7 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
             </div>
             </Link>
             <div className='absolute bottom-[20px] pl-4'>
-                <button>좋아요</button>
+                <button onClick={onClickHandle}>좋아요 {likecount}</button>
                 <button className='pl-5'>댓글</button>
             </div>
         </div>
@@ -245,8 +286,8 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
                 })
                 .catch((error) => {console.log(error)})
                Swal.fire('수정이 완료되었습니다.', '수정된 기록을 확인하세요!', 'success');
-               mutate('api/get-article')
-               setIsmordal(false)
+               mutate('api/get-article');
+               setIsmordal(false);
             }
          })
     }
@@ -255,7 +296,8 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
         <div>
             {
                 articleData &&
-                <Modal isOpen={ismordal} className='m-auto mt-36 pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[500px] h-[700px] bg-white'>
+                <Modal isOpen={ismordal} 
+                    className='m-auto mt-12 pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[80vw] h-[85vh] bg-white'>
                     <p className='font-bold text-3xl'>수정하기</p>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <DefultInputbox type='text' label='제목' defultValue={articleData.title || ''} register={register('title')}/>
