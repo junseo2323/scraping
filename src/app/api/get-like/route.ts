@@ -1,5 +1,10 @@
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
+interface LikeDocument {
+    articleId: string;
+    liker: ( string)[];
+    comment: { userId: string; content: string }[];
+}
 
 export async function GET(request: Request) {
     const client = await clientPromise;
@@ -15,13 +20,14 @@ export async function GET(request: Request) {
         }
 
         // Fetch the article's likes and comments from the database
-        const article = await db.collection('likes').findOne({ _id: new ObjectId(articleId) });
+        const article = await db.collection<LikeDocument>('likes').findOne({ articleId: articleId });
 
         if (!article) {
             return new Response('Article not found', { status: 404 });
         }
 
-        // Respond with the article's like and comment data
+        console.log(article);
+
         return new Response(
             JSON.stringify({
                 liker: article.liker || [],

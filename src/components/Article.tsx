@@ -171,10 +171,11 @@ type Comment = {
 const likeFetcher = async(articleId:string, liker:string) => {
     try{
         const requestBody = {
-            _id: articleId,
-            liker: liker
+            type: 'like',
+            articleId: articleId,
+            userId: liker
         };
-        await axios.put('/api/patch-like',requestBody);
+        await axios.patch('/api/patch-like',requestBody);
     }catch(error){
         console.error(error);
     }
@@ -188,18 +189,15 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
 
     const fetchLikesAndComments = async () => {
         try {
-          // API 엔드포인트 호출
           const response = await axios.get(`/api/get-like?articleId=${articleData._id}`);
       
-          // 응답 데이터 처리
           const data = response.data;
           console.log("data : ",data );
-          // 데이터가 없으면 기본 값 반환
+
           if (!data) {
             return { likeCount: 0, comments: [] };
           }
       
-          // 데이터가 있으면 좋아요 수와 댓글 반환
           return {
             likeCount: data.liker ? data.liker.length : 0,
             comments: data.comment || []
@@ -208,26 +206,22 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
           console.error('Error fetching data:', error);
           return { likeCount: 0, comments: [], error: error };
         }
-      };
+    };
       
     const backgroundTmp = articleData.image[0].url || articleData.image || '';
     const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
-    // 좋아요 처리 함수
     const likeHandle = async() => {
         const { likeCount, comments, error } = await fetchLikesAndComments();
-
-        console.log(likeCount);
-        setLikecount(likeCount);  // 좋아요 수 업데이트
-        setComments(comments);  // 댓글 업데이트
-        
+        setLikecount(likeCount);  
+        setComments(comments);  
     }
 
-    // 클릭 시 좋아요를 업데이트하는 함수
-    const onClickHandle = () => {
-        if (!user?._id) return;  // 사용자가 로그인하지 않으면 처리하지 않음
-        likeFetcher(articleData._id, user._id);  // 좋아요 업데이트 요청
+    const onClickHandle = async() => {
+        if (!user?._id) return;  
+        await likeFetcher(articleData._id, user._id); 
+        likeHandle();
     }
 
     useEffect(()=>{
@@ -236,7 +230,6 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
     
     return(
         <div className='relative drop-shadow-xl	bg-white w-60 h-[27rem] rounded-2xl'>
-            <p>{articleData._id}</p>
             <Link href={articleData.url} className='inline-block w-60 '>
             <div  className='w-60 h-32 place-items-center'>
                 <div className='w-[100%] h-32  overflow-hidden'>
