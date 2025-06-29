@@ -4,7 +4,6 @@ import { Article } from "@/components/Article";
 import Button from "@/components/Button";
 import CreateTag from "@/components/CreateTag";
 import { Inputbox, DefultInputbox } from "@/components/Inputbox";
-import Logo from "@/components/Logo";
 import { useAuth } from "@/context/AuthContext";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -22,7 +21,7 @@ type Inputs = {
 }
 
 //CreateArticle
-export default function createArticle(request: Request) {
+export default function createArticle() {
     const [url, setUrl] = useState<string>("")
     const { data } = useSWR('api/get-metadata?url=' + url, fetcher)
     const [windowState, setWindowState] = useState('online')

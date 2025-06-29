@@ -1,3 +1,6 @@
+import type { MongoClient } from "mongodb";
+
 declare global {
-    var _mongoClientPromise: Promise<MongoClient> | undefined;
-  }
+  // Allow global._mongoClientPromise
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
