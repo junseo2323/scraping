@@ -47,9 +47,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
       const user = await api.get<User>("/api/me"); 
       setUser(user);
       router.push("/home");
-
     } catch (error) {
-      console.error("로그인 실패:", error);
+      return error;
     }
   };
 
@@ -65,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
       });
       localStorage.setItem("token",data.token);
     }catch(error){
-      console.error("회원가입 실패: ", error);
+      return error;
     }
   };
 

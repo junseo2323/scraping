@@ -6,9 +6,10 @@ interface Props {
     type: string,
     label: string,
     register?: UseFormRegisterReturn;
+    error?: string
 }
 
-const Inputbox: React.FC<Props> = ({type,label,register}) => {
+const Inputbox: React.FC<Props> = ({type,label,register,error }) => {
     return(
         <div className="relative pt-4 mt-10 w-1/2">
             
@@ -27,6 +28,7 @@ const Inputbox: React.FC<Props> = ({type,label,register}) => {
         >
             {label}
         </label>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
 
     )

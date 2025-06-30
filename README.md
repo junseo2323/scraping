@@ -1,17 +1,41 @@
-# SCRAPPING!
+# Scraping - 웹 글 스크래핑 및 태그 기반 콘텐츠 모음 서비스
 
-### 나의 일상을 기록하다.
+Scraping은 온라인에서 글을 스크랩하여 태그별로 모아보고, 사용자 인증을 통한 개인화 기능과 커뮤니티 기능을 목표로 하는 서비스입니다.
 
-## 기술 스택
-역할|종류|
----|---|
-COMMON|Git, Github, Notion|
-FRONTEND|Nextjs,React-Native, Typescript, TailwindCSS, Eslint, Prettier|
-BACKEND|NOSQL:MongoDB, Nextjs,NextAuth.js, Mongoose, Typescript|
-DEPLOY|Amazon EC2 , Amazon 53|
+---
 
+## 🚀 서비스 개요
 
-[Figma](https://www.figma.com/design/RBuwmNb8MQ7nI2IpoOpDbb/Scraping!?node-id=0-1&node-type=CANVAS&t=KkdjMlCVKGWyXKkm-0)
+- 온라인 글 스크래핑 기능
+- 태그별 글 모아보기
+- 화면, 로그인/회원가입 
+- 모바일 화면 리팩토링
+- 커뮤니티 기능 (댓글, 좋아요 등)
 
-- by 일병오준서
- 
+---
+
+## 🧱 기술 스택
+
+| 구분        | 사용 기술                                    |
+|-------------|---------------------------------------------|
+| **Common**  | Git, GitHub, Notion                         |
+| **Frontend**| Next.js (Node 기반), TypeScript, TailwindCSS, SWR, ESLint, Prettier |
+| **Backend** | Node.js, Next.js API Routes, MongoDB, Mongoose, TypeScript |
+| **상태관리**| Context API                                 |
+| **배포**    | Vercel                                      |
+
+---
+
+## 🔑 주요 기능
+
+- **온라인 글 스크래핑**  
+  URL에서 글 정보(제목, 이미지, 내용 일부)를 자동으로 추출하여 저장
+
+- **태그별 콘텐츠 정리**  
+  스크랩한 글을 태그별로 분류하여 손쉽게 탐색 가능
+
+- **커뮤니티 기능 (MVP 2 예정)**  
+  댓글 작성, 좋아요 기능 등 사용자 간 소통 지원
+
+---
+

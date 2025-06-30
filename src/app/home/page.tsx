@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import {Tag} from "@/utils/schema"
 import { fetcher } from "@/utils/api"
+import { useRouter } from "next/navigation"
 
 
 const fetchArticle = (id: string, tag: string) => {
@@ -17,6 +18,7 @@ const fetchArticle = (id: string, tag: string) => {
 }
 
 export default function home() {
+    const router = useRouter();
     const {user} = useAuth();
 
     const {data: articleData,error: articleError,isLoading: articleisLoading} = useSWR('api/get-article/'+user?._id, fetcher)
@@ -48,8 +50,17 @@ export default function home() {
         }
       }, [tagData, user?._id]);
 
+      useEffect(()=>{
+        if(!user){
+            router.push('/start');
+        };
+      },[])
+
       return(
-        <div className="pt-10 grid grid-rows-2">
+        <div>
+            {
+            user ? 
+            <div className="pt-10 grid grid-rows-2">
             <div id="main-article" className="pl-8 pt-3">
                 <p>나의 기록들</p>
                 <div id="my-article" 
@@ -82,6 +93,10 @@ export default function home() {
                 </div>
                 
             </div>
+                </div> :
+                <div>
+            </div>
+            }
         </div>
     )
 }

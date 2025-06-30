@@ -5,6 +5,7 @@ import { Inputbox } from '@/components/Inputbox';
 import Logo from '@/components/Logo';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 type LoginFormInputs = {
@@ -16,8 +17,16 @@ export default function Login() {
     const { register, handleSubmit } = useForm<LoginFormInputs>(); 
     const { login } = useAuth();
 
-    const onSubmit: SubmitHandler<LoginFormInputs> = (data) => {
-        login(data.email, data.password);
+    const [errstate,setErrstate] = useState<string>('');
+
+    const onSubmit: SubmitHandler<LoginFormInputs> = async(data) => {
+        const res = await login(data.email, data.password);
+
+        if(res !== undefined){
+            setErrstate(String(res));
+        } else {
+            setErrstate("");
+        }
     };
 
     return (
@@ -32,11 +41,12 @@ export default function Login() {
                         label="이메일"
                     />
                     <Inputbox
-                        register={register("password", { required: '이메일은 필수입니다.' })}
+                        register={register("password", { required: '비밀번호는 필수입니다.' })}
                         type="password"
                         label="비밀번호"
                     />
                     <Link href="/register"><p>아이디가 없다면? 회원가입</p></Link>
+                    <p className='text-red-500 font-bold'>{errstate}</p>
                     <div className='mt-24 grid grid-cols-1 place-items-end'>
                         <button
                             type="submit"
