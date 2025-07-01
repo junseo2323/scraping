@@ -26,13 +26,14 @@ export default function home() {
     
     const [tagArticlesMap, setTagArticlesMap] = useState<{[tagname:string]: any[]}>({});
     const [loadingTags, setLoadingTags] = useState<{ [tagname: string]: boolean }>({});
-
+    
     const tagArticle = async(tagname: string) => {
         if(!user?._id) return;
         setLoadingTags(prev => ({ ...prev, [tagname]: true }));
 
         try{
             const res = await fetchArticle(user?._id,tagname);
+            console.log(res);
             setTagArticlesMap(prev => ({ ...prev, [tagname]: res }));
         }catch(err) {
             console.error('에러발생');
@@ -40,6 +41,14 @@ export default function home() {
             setLoadingTags(prev => ({ ...prev, [tagname]: false }));
         }
     }
+
+    useEffect(()=>{
+        if(user){
+            router.push('/home');
+        } else{
+            router.push('/start');
+        }
+    },[user]);
 
 
     useEffect(() => {
@@ -50,11 +59,7 @@ export default function home() {
         }
       }, [tagData, user?._id]);
 
-      useEffect(()=>{
-        if(!user){
-            router.push('/start');
-        };
-      },[])
+
 
       return(
         <div>
@@ -84,7 +89,7 @@ export default function home() {
                             className="py-5 flex gap-x-[70px] overflow-x-auto">
                             {loadingTags[tag.tagname] && <p>로딩중...</p>}
                             {tagArticlesMap[tag.tagname]?.map((article: any) => (
-                            <MiniArticle key={article._id} articleData={article} tagData={tagData} />
+                                <MiniArticle key={article._id} articleData={article} tagData={tagData} />
                             ))}
                             </div>
                         </div>

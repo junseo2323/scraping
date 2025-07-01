@@ -77,6 +77,7 @@ interface MiniArticleprops {
 }
 
 const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
+    const {user} = useAuth();
     const backgroundTmp = articleData.image[0].url || articleData.image || '';
     const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
@@ -115,7 +116,7 @@ const MiniArticle:React.FC<MiniArticleprops> = ({articleData,tagData}) => {
                 })
                 .catch((error) => {console.error(error)})               
                Swal.fire('삭제가 완료되었습니다.', '기록을 확인하세요!', 'success');
-               mutate('api/get-article')
+               mutate('api/get-article/'+user?._id);
             }
          })
 
@@ -410,8 +411,8 @@ type Inputs = {
 const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,articleData}) => {
     const {user} = useAuth();
     const {data} = useSWR('api/get-tag/'+user?._id);
-    const [initaldata,setInitalData] = useState(articleData)
-    const {register,handleSubmit,watch} = useForm<Inputs>()
+    const [initaldata,setInitalData] = useState(articleData);
+    const {register,handleSubmit,watch} = useForm<Inputs>();
     useEffect(() => {
         const subscirbe = watch((data, { name }) => {
             setInitalData((prevState) => ({
@@ -444,7 +445,7 @@ const ModifyArticle:React.FC<ModifyArticleType> = ({ismordal,setIsmordal,article
                 })
                 .catch((error) => {console.error(error)})
                Swal.fire('수정이 완료되었습니다.', '수정된 기록을 확인하세요!', 'success');
-               mutate('api/get-article');
+               mutate('api/get-article/'+user?._id);
                setIsmordal(false);
             }
          })
