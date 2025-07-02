@@ -30,7 +30,7 @@ const Article:React.FC<Articleprops> = ({articleData,tagData}) => {
         let resultTag = []
         for (let tmptag of tagData) {
             if(articleData.tag && articleData.tag.includes(tmptag.tagname)){
-                resultTag.push(tmptag)
+                resultTag.push(tmptag) 
             }
         } 
         return resultTag
