@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { JSDOM } from 'jsdom'
 import axios from "axios"
+import * as cheerio from 'cheerio';
 
 const getNaverBlogStandardURL = async(htmlBody: string) => {
     const ogs = require("open-graph-scraper")
@@ -81,7 +82,36 @@ function extractYouTubeVideoId(url: string): string | null {
       console.error('Invalid URL', err);
       return null;
     }
-  }
+}
+
+const fetchFail = async(url: string) => {
+    try {
+        // URL에서 HTML 문서 가져오기
+        const response = await axios.get(url);
+
+        // 응답 상태 코드가 200인지 확인
+        if (response.status !== 200) {
+          throw new Error(`HTTP 요청 실패: ${response.status}`);
+        }
+    
+        const data = response.data;
+        // cheerio로 HTML 파싱
+        const $ = cheerio.load(data);
+    
+        // 메타 태그 파싱
+        const title = $('meta[property="og:title"]').attr('content') || $('title').text();
+        const description = $('meta[property="og:description"]').attr('content') || '';
+        const image = $('meta[property="og:image"]').attr('content') || '';
+    
+        // 결과 반환
+        return { title, description, image };
+      } catch (error) {
+        console.error('Error fetching metadata:', error);
+        throw new Error('메타 데이터를 가져오는 중 오류가 발생했습니다.');
+      }
+    
+      
+}
 
 export async function GET(request: NextRequest) {
     const ogs = require("open-graph-scraper");
@@ -129,11 +159,30 @@ export async function GET(request: NextRequest) {
         flatform: getFlatform(resdata.ogUrl)
     }})
     }catch (error) {
-        console.error('Error scraping OG data:', error);
-        return NextResponse.json({
-            error: 'Failed to scrape the metadata.',
-            message: error,
-        }, { status: 500 });
-    }
+        try{
+            let resdata;
+            const res = await fetchFail(reqUrl);
+            resdata = {
+                ogTitle: res.title,
+                ogDescription: res.description,
+                ogUrl: reqUrl,
+                ogImage: [res.image]
+           }
 
+           return NextResponse.json({data:{        
+            title: resdata.ogTitle,
+            subtitle: resdata.ogDescription,
+            url: resdata.ogUrl,
+            image: resdata.ogImage,
+            flatform: getFlatform(resdata.ogUrl)
+        }})
+        
+        }catch(error){
+            console.error(error);
+            return NextResponse.json({
+                error: 'Failed to scrape the metadata.',
+                message: error,
+            }, { status: 500 });    
+        }
+    }
 }

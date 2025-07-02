@@ -1,4 +1,3 @@
-import dummydata from '@/../data/testdata.json'
 import Tag from './Tag'
 import Link from 'next/link'
 
@@ -13,8 +12,6 @@ import Swal from 'sweetalert2'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '@/context/AuthContext'
 import {createArticleData,tagData} from "@/types/type"
-import { fetcher } from '@/utils/api'
-import Button from './Button'
 
 
 interface Articleprops {
@@ -191,6 +188,7 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
     const {user} = useAuth();
 
     const [likecount, setLikecount] = useState<number>(0);
+    const [commentcount, setCommentcount] = useState<number>(0);
     const [comments, setComments] = useState();
     const [iscommentmordal,setIscommentmordal] = useState<boolean>(false)
 
@@ -222,6 +220,7 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
         const { likeCount, comments, error } = await fetchLikesAndComments();
         setLikecount(likeCount);  
         setComments(comments);  
+        setCommentcount(comments.length);
     }
 
     const onClickHandle = async() => {
@@ -260,7 +259,7 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
                 <button className='pl-5'
                         onClick={()=>{
                             setIscommentmordal(true);
-                        }}>댓글</button>
+                        }}>댓글 {commentcount}</button>
             </div>
             <CommentArticle 
                 iscommentmordal={iscommentmordal} 
@@ -302,36 +301,107 @@ const commentFetcher = async(articleId:string,liker: string , comment:string) =>
 
 
 const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscommentmordal,articleId,articleTitle,comments,userId,likeHandle}) => {
+    const {user} = useAuth();
     const [newComment, setNewComment] = useState<string>('');
-    
+    const [ismodifymordal, setIsmodifymordal] = useState<boolean>(false);
+    const [usernames, setUsernames] = useState<Record<string, string>>({});
+
     const onClickHandle = async() => {
         if (!userId) return;  
         await commentFetcher(articleId,userId, newComment);
         setNewComment('');
         likeHandle();
     }   
-    
-    const [usernames, setUsernames] = useState<Record<string, string>>({});
 
-        useEffect(() => {
-            const fetchUsernames = async () => {
-                const newUsernames: Record<string, string> = {};
-                for (const comment of comments) {
-                    const id = comment.userId;
-                    if (!usernames[id]) {
-                        try {
-                            const res = await axios.get('/api/get-username?userId=' + id);
-                            newUsernames[id] = res.data.username;
-                        } catch (error) {
-                            newUsernames[id] = "존재하지 않는 사용자.";
-                        }
+    const onDeleteHandle = async() => {
+
+    }
+
+    
+    interface ModifyModalProps {
+        comment: string;
+    }
+
+    const ModifyModal: React.FC<ModifyModalProps> = ({comment}) => {
+        const [newComment, setNewComment] = useState<string>(comment);
+        
+        const onClickHandle = async() => {
+            const body = {
+                articleId: articleId,
+                type: 'comment',
+                userId: user?._id,
+                content: newComment
+            }
+    
+            try{
+                const res = await axios.patch('api/patch-like',body);
+                console.log(res);
+                setIsmodifymordal(false);
+            }catch(error){
+                console.error(error);
+            }
+        }
+        return(
+            <div>
+                <Modal isOpen={ismodifymordal}
+                        className='m-auto mt-[21vh] pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[50vw] h-[25vh] bg-white'>
+                    댓글수정
+                <div className="relative pt-4 mt-10 w-1/2">
+                    <input
+                        type='text'
+                        className="w-[40vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
+                        defaultValue={comment}
+                        placeholder='댓글'
+                        id='댓글'
+                        name='댓글'
+                        onChange={(e)=>{
+                            setNewComment(e.target.value);
+                        }}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                onClickHandle();   
+                            }
+                        }}
+                        required
+                    />
+                    <label
+                        htmlFor='댓글'
+                        className="absolute w-[40vw] top-0 left-0 text-gray-300 text-ms text-bold transition-all duration-200  peer-placeholder-shown:top-2 peer-placeholder-shown:left-2 peer-placeholder-shown:text-4xl peer-placeholder-shown:font-semibold peer-placeholder-shown:cursor-text peer-focus:top-0 peer-focus:text-[#FFAA55] peer-focus:text-sm peer-focus:font-normal"
+                    >
+                        댓글
+                    </label>
+                </div>
+    
+                <button
+                    onClick={onClickHandle}
+                    className="float-right mr-4 my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                    작성하기
+                </button>
+                </Modal>
+            </div>
+        )
+    }
+    
+
+    useEffect(() => {
+        const fetchUsernames = async () => {
+            const newUsernames: Record<string, string> = {};
+            for (const comment of comments) {
+                const id = comment.userId;
+                if (!usernames[id]) {
+                    try {
+                        const res = await axios.get('/api/get-username?userId=' + id);
+                        newUsernames[id] = res.data.username;
+                    } catch (error) {
+                        newUsernames[id] = "존재하지 않는 사용자.";
                     }
                 }
-                setUsernames((prev) => ({ ...prev, ...newUsernames }));
-            };
+            }
+            setUsernames((prev) => ({ ...prev, ...newUsernames }));
+        };
 
-            if (comments?.length) fetchUsernames();
-        }, [comments]);
+        if (comments?.length) fetchUsernames();
+    }, [comments]);
 
     return(
         <div>
@@ -383,14 +453,17 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
                                     <p className='text-sm'>{usernames[i.userId]}</p>
                                     <div className='grid grid-cols-2 w-20'>
                                         <button>삭제</button>
-                                        <button>수정</button>
+                                        <button
+                                            onClick={()=>{setIsmodifymordal(true)}}
+                                        >수정</button>
                                     </div>
                                 </div>
+                                <ModifyModal comment={String(i.content)}/>
                             </div>
                     ))
                 }
                 </div>
-
+                
                 <button onClick={()=>{setIscommentmordal(false)}}>돌아가기</button>
             </Modal>
         </div>

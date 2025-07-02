@@ -1,6 +1,5 @@
 import clientPromise from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
-import { ObjectId } from "mongodb";
 
 export async function PATCH(req: NextRequest) {
   const client = await clientPromise;
@@ -21,10 +20,8 @@ export async function PATCH(req: NextRequest) {
       updateQuery = {
         $push: {
           comment: {
-            _id: new ObjectId(),
             userId: body.userId,
             content: body.content,
-            createdAt: new Date()
           },
         },
       };
@@ -36,7 +33,6 @@ export async function PATCH(req: NextRequest) {
       { articleId: body.articleId }, // 필터
       updateQuery
     );
-    console.log(result);
     return NextResponse.json({ success: true, modifiedCount: result.modifiedCount });
   } catch (error) {
     console.error(error);

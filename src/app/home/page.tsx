@@ -1,10 +1,7 @@
 "use client"
 
 import {MiniArticle} from "@/components/Article"
-import Logo from "@/components/Logo"
-import dummydata from "@/../data/testdata.json"
 import useSWR from "swr"
-import axios from 'axios'
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
 import {Tag} from "@/utils/schema"
