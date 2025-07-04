@@ -14,4 +14,4 @@ const Button: React.FC<props> = ({text}) => {
     )
 }
 
-export default Button
+export default Button 

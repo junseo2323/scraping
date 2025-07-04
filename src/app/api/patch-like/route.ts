@@ -17,18 +17,19 @@ export async function PATCH(req: NextRequest) {
       updateQuery = {
         $addToSet: { liker: body.userId }, // liker는 배열이어야 함
       };
-    } else if (body.type === "comment" && body.userId && body.content) {
+    } else if (body.type === "comment" && body.userId && body.commentText) {
       updateQuery = {
         $push: {
           comment: {
-            _id: new ObjectId(),
+            commentId: new ObjectId(),
             userId: body.userId,
-            content: body.content,
+            commentText: body.commentText,
             createdAt: new Date()
           },
         },
       };
     } else {
+      console.log(body);
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
     }
 
@@ -36,7 +37,6 @@ export async function PATCH(req: NextRequest) {
       { articleId: body.articleId }, // 필터
       updateQuery
     );
-    console.log(result);
     return NextResponse.json({ success: true, modifiedCount: result.modifiedCount });
   } catch (error) {
     console.error(error);

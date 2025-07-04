@@ -291,7 +291,7 @@ const commentFetcher = async(articleId:string,liker: string , comment:string) =>
             type: 'comment',
             articleId: articleId,
             userId: liker,
-            content: comment
+            commentText: comment
         };
         await axios.patch('/api/patch-like',requestBody);
     }catch(error){
@@ -303,7 +303,6 @@ const commentFetcher = async(articleId:string,liker: string , comment:string) =>
 const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscommentmordal,articleId,articleTitle,comments,userId,likeHandle}) => {
     const {user} = useAuth();
     const [newComment, setNewComment] = useState<string>('');
-    const [ismodifymordal, setIsmodifymordal] = useState<boolean>(false);
     const [usernames, setUsernames] = useState<Record<string, string>>({});
 
     const onClickHandle = async() => {
@@ -320,31 +319,44 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
     
     interface ModifyModalProps {
         comment: string;
+        commentId: string;
     }
 
-    const ModifyModal: React.FC<ModifyModalProps> = ({comment}) => {
+    const ModifyModal: React.FC<ModifyModalProps> = ({comment,commentId}) => {
         const [newComment, setNewComment] = useState<string>(comment);
-        
+        const [ismodifymordal, setIsmodifymordal] = useState<boolean>(false);
+
         const onClickHandle = async() => {
             const body = {
+                commentId: commentId,
                 articleId: articleId,
                 type: 'comment',
                 userId: user?._id,
-                content: newComment
+                commentText: newComment
             }
     
             try{
-                const res = await axios.patch('api/patch-like',body);
+                const res = await axios.patch('api/modify-like',body);
                 console.log(res);
                 setIsmodifymordal(false);
+                likeHandle();
             }catch(error){
                 console.error(error);
             }
         }
+
+        if(!ismodifymordal) return(
+            <button
+            onClick={()=>{setIsmodifymordal(true)}}
+            >
+                수정
+            </button>
+        )
+
         return(
             <div>
                 <Modal isOpen={ismodifymordal}
-                        className='m-auto mt-[21vh] pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[50vw] h-[25vh] bg-white'>
+                        className='select-none m-auto mt-[21vh] pl-5 pt-2 rounded-3xl drop-shadow-2xl w-[50vw] h-[25vh] bg-white'>
                     댓글수정
                 <div className="relative pt-4 mt-10 w-1/2">
                     <input
@@ -371,12 +383,14 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
                         댓글
                     </label>
                 </div>
-    
-                <button
-                    onClick={onClickHandle}
-                    className="float-right mr-4 my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
-                    작성하기
-                </button>
+                <div className='grid grid-cols-2'>
+                    <p className='select-none' onClick={()=>{setIsmodifymordal(false)}}>돌아가기</p>
+                    <button
+                        onClick={onClickHandle}
+                        className="float-right mr-4 my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                        작성하기
+                    </button>
+                </div>
                 </Modal>
             </div>
         )
@@ -437,7 +451,7 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
     
                 <button
                     onClick={onClickHandle}
-                    className="my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                    className="select-none my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
                     작성하기
                 </button>
                 </div>
@@ -445,26 +459,24 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
                 {
                     comments && comments.map((i: any)=>(
                             <div 
+                                id={i.commentId}
                                 className='grid grid-cols-[2fr_1fr] h-16 mt-3 shadow-sm rounded-md'>
                                 <p
                                     className='text-lg font-normal ml-2'
-                                >{i.content}</p>
+                                >{i.commentText}</p>
                                 <div>
-                                    <p className='text-sm'>{usernames[i.userId]}</p>
-                                    <div className='grid grid-cols-2 w-20'>
+                                    <p className='text-sm select-none'>{usernames[i.userId]}</p>
+                                    <div className='grid grid-cols-2 w-20 select-none'>
                                         <button>삭제</button>
-                                        <button
-                                            onClick={()=>{setIsmodifymordal(true)}}
-                                        >수정</button>
+                                        <ModifyModal comment={String(i.commentText)} commentId={String(i.commentId)}/>
                                     </div>
                                 </div>
-                                <ModifyModal comment={String(i.content)}/>
                             </div>
                     ))
                 }
                 </div>
                 
-                <button onClick={()=>{setIscommentmordal(false)}}>돌아가기</button>
+                <button className='select-none' onClick={()=>{setIscommentmordal(false)}}>돌아가기</button>
             </Modal>
         </div>
     )

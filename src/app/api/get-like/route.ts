@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 interface LikeDocument {
     articleId: string;
     liker: ( string)[];
-    comment: { userId: string; content: string }[];
+    comment: {commentId: string; userId: string; commentText: string }[];
 }
 
 export async function GET(request: Request) {

@@ -1,5 +1,6 @@
 import clientPromise from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 
 export async function PATCH(req: NextRequest) {
   const client = await clientPromise;
@@ -11,28 +12,34 @@ export async function PATCH(req: NextRequest) {
     const collection = db.collection("likes");
 
     let updateQuery = {};
+    let options = {};
 
     if (body.type === "like" && body.userId) {
       updateQuery = {
         $addToSet: { liker: body.userId }, // liker는 배열이어야 함
       };
-    } else if (body.type === "comment" && body.userId && body.content) {
+    } else if (body.type === "comment" && body.userId && body.commentText) {
       updateQuery = {
-        $push: {
-          comment: {
-            userId: body.userId,
-            content: body.content,
-          },
+        $set: {
+          'comment.$[elem].commentText': body.commentText,
         },
       };
+      body.commentId = new ObjectId(body.commentId);
+      options = {
+        arrayFilters: [
+          {'elem.commentId': body.commentId}
+        ],
+      }
     } else {
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
     }
 
     const result = await collection.updateOne(
       { articleId: body.articleId }, // 필터
-      updateQuery
+      updateQuery,
+      options
     );
+    console.log(result);
     return NextResponse.json({ success: true, modifiedCount: result.modifiedCount });
   } catch (error) {
     console.error(error);
