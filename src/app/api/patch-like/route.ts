@@ -29,7 +29,6 @@ export async function PATCH(req: NextRequest) {
         },
       };
     } else {
-      console.log(body);
       return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
     }
 

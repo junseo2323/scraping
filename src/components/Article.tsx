@@ -182,11 +182,24 @@ const likeFetcher = async(articleId:string, liker:string) => {
     }
 }
 
+const unlikeFetcher = async(articleId:string, liker:string) => {
+    try{
+        const requestBody = {
+            type: 'like',
+            articleId: articleId,
+            userId: liker
+        };
+        await axios.patch('/api/delete-like',requestBody);
+    }catch(error){
+        console.error(error);
+    }
+}
 
 
 const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
     const {user} = useAuth();
 
+    const [isuserlike, setIsuserlike] = useState<boolean>(false);
     const [likecount, setLikecount] = useState<number>(0);
     const [commentcount, setCommentcount] = useState<number>(0);
     const [comments, setComments] = useState();
@@ -195,12 +208,13 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
     const fetchLikesAndComments = async () => {
         try {
           const response = await axios.get(`/api/get-like?articleId=${articleData._id}`);
-      
           const data = response.data;
 
           if (!data) {
             return { likeCount: 0, comments: [] };
           }
+
+          if(data.liker.includes(user?._id)) setIsuserlike(true);
       
           return {
             likeCount: data.liker ? data.liker.length : 0,
@@ -225,14 +239,24 @@ const FeedArticle:React.FC<FeedArticleprops> = ({articleData}) => {
 
     const onClickHandle = async() => {
         if (!user?._id) return;  
-        await likeFetcher(articleData._id, user._id); 
+        if (isuserlike){
+            await unlikeFetcher(articleData._id, user._id); 
+            setIsuserlike(false);
+        }else {
+            await likeFetcher(articleData._id, user._id); 
+            setIsuserlike(true);
+        }
         likeHandle();
     }
 
     useEffect(()=>{
         likeHandle();
-    },[])
-    
+    },[]);
+
+    useEffect(()=>{
+        likeHandle();
+    },[user]);
+
     return(
         <div className='relative drop-shadow-xl	bg-white w-60 h-[27rem] rounded-2xl'>
             <Link href={articleData.url} className='inline-block w-60 '>
@@ -312,8 +336,19 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
         likeHandle();
     }   
 
-    const onDeleteHandle = async() => {
-
+    const onDeleteHandle = async(commentId: string) => {
+        if(!userId) return;
+        try{    
+            const body = {
+                type: 'comment',
+                commentId: commentId,
+                articleId: articleId           
+            }
+            const result = await axios.patch('api/delete-like',body);
+        }catch(error){
+            console.error(error);
+        }
+        likeHandle();
     }
 
     
@@ -337,7 +372,6 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
     
             try{
                 const res = await axios.patch('api/modify-like',body);
-                console.log(res);
                 setIsmodifymordal(false);
                 likeHandle();
             }catch(error){
@@ -467,7 +501,9 @@ const CommentArticle:React.FC<CommentArticleType> = ({iscommentmordal,setIscomme
                                 <div>
                                     <p className='text-sm select-none'>{usernames[i.userId]}</p>
                                     <div className='grid grid-cols-2 w-20 select-none'>
-                                        <button>삭제</button>
+                                        <button
+                                            onClick={()=>{onDeleteHandle(i.commentId)}}
+                                        >삭제</button>
                                         <ModifyModal comment={String(i.commentText)} commentId={String(i.commentId)}/>
                                     </div>
                                 </div>
