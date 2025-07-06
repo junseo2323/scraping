@@ -1,6 +1,6 @@
 "use client"
 
-import {MiniArticle} from "@/components/Article"
+import {MiniArticle} from "@/components/article"
 import useSWR from "swr"
 import { useEffect, useState } from "react"
 import { useAuth } from "@/context/AuthContext"
@@ -16,36 +16,34 @@ const fetchArticle = (id: string, tag: string) => {
 
 export default function home() {
     const router = useRouter();
-    const {user} = useAuth();
+    const { user, isLoading } = useAuth();
 
-    const {data: articleData,error: articleError,isLoading: articleisLoading} = useSWR('api/get-article/'+user?._id, fetcher)
-    const {data: tagData,error: tagError,isLoading: tagisLoading} = useSWR('api/get-tag/'+user?._id, fetcher)
-    
-    const [tagArticlesMap, setTagArticlesMap] = useState<{[tagname:string]: any[]}>({});
+    const { data: articleData, error: articleError, isLoading: articleisLoading } = useSWR(user ? 'api/get-article/' + user._id : null, fetcher)
+    const { data: tagData, error: tagError, isLoading: tagisLoading } = useSWR(user ? 'api/get-tag/' + user._id : null, fetcher)
+
+    const [tagArticlesMap, setTagArticlesMap] = useState<{ [tagname: string]: any[] }>({});
     const [loadingTags, setLoadingTags] = useState<{ [tagname: string]: boolean }>({});
-    
-    const tagArticle = async(tagname: string) => {
-        if(!user?._id) return;
+
+    const tagArticle = async (tagname: string) => {
+        if (!user?._id) return;
         setLoadingTags(prev => ({ ...prev, [tagname]: true }));
 
-        try{
-            const res = await fetchArticle(user?._id,tagname);
+        try {
+            const res = await fetchArticle(user?._id, tagname);
             console.log(res);
             setTagArticlesMap(prev => ({ ...prev, [tagname]: res }));
-        }catch(err) {
+        } catch (err) {
             console.error('에러발생');
-        }finally {
+        } finally {
             setLoadingTags(prev => ({ ...prev, [tagname]: false }));
         }
     }
 
-    useEffect(()=>{
-        if(user){
-            router.push('/home');
-        } else{
+    useEffect(() => {
+        if (!isLoading && !user) {
             router.push('/start');
         }
-    },[user]);
+    }, [user, isLoading, router]);
 
 
     useEffect(() => {

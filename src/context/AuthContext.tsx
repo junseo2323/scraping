@@ -9,6 +9,7 @@ interface AuthContextType {
   logout: () => void;
   registerContext: (email:string, password:string, password2:string, nickname: string, subtitle:string) => void;
   user?: User;
+  isLoading: boolean;
 }
 
 interface User {
@@ -26,6 +27,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children: ReactNode}) => {
   const [user, setUser] = useState<User|undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(()=>{
@@ -33,8 +35,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
   },[]);
 
   const configToken = async() => {
-    const user = await api.get<User>("/api/me"); 
-    setUser(user);
+    setIsLoading(true);
+    try {
+      const user = await api.get<User>("/api/me"); 
+      setUser(user);
+    } catch (error) {
+      setUser(undefined);
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   
@@ -74,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }:{children
   };
 
   return (
-    <AuthContext.Provider value={{login,logout ,registerContext, user}}>
+    <AuthContext.Provider value={{login,logout ,registerContext, user, isLoading}}>
       {children}
     </AuthContext.Provider>
   );

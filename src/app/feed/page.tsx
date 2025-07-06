@@ -1,6 +1,6 @@
 "use client"
 
-import { FeedArticle } from "@/components/Article";
+import { FeedArticle } from "@/components/article";
 import { fetcher } from "@/utils/api"
 import { useEffect, useState } from "react"
 import { createArticleData } from "@/types/type";

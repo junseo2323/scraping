@@ -1,6 +1,6 @@
 'use client'
 
-import { Article } from "@/components/Article";
+import { Article } from "@/components/article";
 import Button from "@/components/Button";
 import CreateTag from "@/components/CreateTag";
 import { Inputbox, DefultInputbox } from "@/components/Inputbox";
