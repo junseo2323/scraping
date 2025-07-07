@@ -2,14 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-.toastui-editor-contents h1{
-    border-bottom: none;
+.toastui-editor-contents h1 {
+    font-size: 32px !important;
+    line-height: 48px !important;
+    border-bottom: 0 !important;
+    margin-bottom: 1rem !important;
 }
 
-.toastui-editor-contents h2{
-    border-bottom: none;
+.toastui-editor-contents h2 {
+    font-size: 24px !important;
+    border-bottom: 0 !important;
+    margin-bottom: 1rem !important;
+}
+  
+.toastui-editor-contents div {
+    width: 100% !important;
 }
 
-.toastui-editor-contents h3{
-    border-bottom: none;
+.toastui-editor-defaultUI-toolbar {
+    background-color: #ffffff !important;
+    border-bottom: none !important;
+}
+
+.toastui-editor-defaultUI {
+    border: none !important;
+}
+
+.toastui-editor-main .toastui-editor-md-splitter {
+    background-color: #ffc456 !important;
 }

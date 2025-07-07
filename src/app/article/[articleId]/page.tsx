@@ -5,11 +5,13 @@ import { Viewer } from "@toast-ui/react-editor";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
-import '../../globals.css';
 import { api } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import Modal from "react-modal"
  
+import styles from './article.module.css';
+
+
 const likeFetcher = async (articleId: string, liker: string) => {
     try {
         const requestBody = {
@@ -155,7 +157,7 @@ export default function WritenArticle(){
     const viewerRef = useRef<Viewer>(null);
    
     return(
-        <div className="mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
+        <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
             <div>
                 <button onClick={onClickHandle}>좋아요 {likecount}</button>
                 <button className='pl-5'
@@ -164,24 +166,25 @@ export default function WritenArticle(){
                     }}>댓글 {commentcount}</button>
             </div>
             <p className="font-bold text-4xl">{title}</p>
-            <div className="grid grid-cols-[0.1fr_1fr]">
+            <div className="grid grid-cols-[0.5fr_1fr]">
                 <p className="font-bold">{writer}</p>
                 <p className="font-thin">{createdAt}</p>
             </div>
-            <div className="grid grid-cols-[0.2fr_0.2fr_0.2fr]">
+            <div className="grid grid-cols-[0.2fr_0.2fr_0.2fr]   ">
                 <p>태그1</p>
                 <p>태그2</p>
                 <p>태그3</p>
             </div>
-            <div className="grid gird-rows-2">
-                <div>
+            <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
+                <div className='w-full'>
                     <Viewer
+                        
                         key={content}
                         ref={viewerRef}
                         initialValue={content}
                     />
                 </div>
-                <div>
+                <div className='mr-10'>
                     <Comment
                         articleId={articleData || ''}
                         comments={comments}
@@ -345,7 +348,7 @@ const Comment: React.FC<CommentArticleType> = ({ articleId,comments, userId, ref
 
     return(
         <div>
-        <div className='m-auto mt-12 pl-5 pt-2 rounded-3xl w-[80vw] h-[85vh] bg-white'>
+        <div className='m-auto mt-12 pt-2 rounded-3xl w-[50vw] h-[85vh] bg-white'>
             <div className='grid grid-cols-[2fr_1fr]'>
                 <div className="relative pt-4 mt-10 w-1/2">
                     <input

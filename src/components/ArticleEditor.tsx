@@ -10,6 +10,8 @@ import { useRouter } from 'next/navigation';
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import Prism from 'prismjs';
+import 'tui-color-picker/dist/tui-color-picker.css';
+import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 
 import '../app/globals.css';
 
@@ -24,7 +26,29 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
 
     const editorRef = useRef<Editor>(null);
 
-    const [getContent, setGetContent] = useState("");
+    const [previewStyle, setPreviewStyle] = useState<'vertical' | 'tab'>(
+        typeof window !== 'undefined' && window.innerWidth > 900 ? 'vertical' : 'tab'
+    );
+
+    useEffect(() => {
+        const handleResize = () => {
+          if (window.innerWidth > 900) {
+            setPreviewStyle('vertical');
+          } else {
+            setPreviewStyle('tab');
+          }
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        handleResize();
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []);
+    
+    
     const [title, setTitle] = useState("");
 
 
@@ -86,7 +110,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                     ref={editorRef}
                     initialValue={initialValue || ' '} 
                     initialEditType="markdown" 
-                    previewStyle={window.innerWidth > 900 ? 'vertical' : 'tab'} // tab, vertical
+                    previewStyle={previewStyle}
                     hideModeSwitch={true}
                     height="calc(100% - 10rem)"
                     theme={''} // '' & 'dark'
@@ -96,11 +120,11 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                     plugins={[colorSyntax, [codeSyntaxHighlight, { highlighter: Prism }]]} // 추가!
                 />
             </div>
-            <button onClick={handleSave} style={{ marginTop: '10px', padding:
-                '5px 10px' }}>
-                저장
+            <button
+                onClick={handleSave}
+                className="float-right mr-4 my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                작성하기
             </button>
-          
         </div>
     )
 }
