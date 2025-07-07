@@ -11,8 +11,10 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import useSWR from "swr";
 import { fetcher } from "@/utils/api";
 import { useRouter } from "next/navigation";
-import {createArticleData,articleData} from "@/types/type"
-import ArticleEditor from "@/components/ArticleEditor";
+import {createArticleData,articleData} from "@/types/type";
+import dynamic from 'next/dynamic';
+
+const ArticleEditor = dynamic(() => import('@/components/ArticleEditor'), { ssr: false });
 
 //Type
 type Inputs = {
@@ -75,9 +77,7 @@ interface WriteTypeProps {
 }
 
 
-const Write: React.FC<WriteTypeProps> = ({ setWindowState }) => {
-
-    const { register, handleSubmit } = useForm<Inputs>()
+const Write: React.FC<WriteTypeProps> = () => {
 
     return (
         <div>
