@@ -1,5 +1,6 @@
 'use client'
 
+import { useParams } from 'next/navigation';
 import { Viewer } from "@toast-ui/react-editor";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -8,12 +9,6 @@ import '../../globals.css';
 import { api } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import Modal from "react-modal"
-
-interface ArticlePageProps {
-    params: {
-        articleId: string;
-    }
-}
  
 const likeFetcher = async (articleId: string, liker: string) => {
     try {
@@ -59,9 +54,9 @@ const fetchArticleById = async(id: string) => {
     }
 }
 
-export default function WritenArticle({params}: ArticlePageProps){
+export default function WritenArticle(){
     const {user} = useAuth();
-    const {articleId} = params;
+    const { articleId } = useParams() as { articleId: string };
 
     const url = process.env.NEXT_PUBLIC_SCRAPING_URL+'/article/'+articleId;
 
