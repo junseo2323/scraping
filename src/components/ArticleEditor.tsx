@@ -50,7 +50,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
     
     
     const [title, setTitle] = useState("");
-
+    const [images, setImages] = useState<string[]>([]);
 
     const titleHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
@@ -63,7 +63,8 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                 title: title,
                 content: content,
                 writer: user?._id,
-                writername: user?.nickname
+                writername: user?.nickname,
+                images: images
             }
             try{
                 const res = await axios.post('/api/write',body);
@@ -74,6 +75,20 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
             }
         }
     }
+
+    const handleImageUpload = async (blob: Blob): Promise<string> => {
+        const formData = new FormData();
+        formData.append('file', blob);
+      
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+      
+        const data = await res.json();
+        setImages(prevItems => [...prevItems, data.url]);
+        return data.url; // 이미지 URL 반환
+    };
 
     const toolbarItems = [
         ['heading', 'bold', 'italic', 'strike'],
@@ -113,6 +128,18 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                     previewStyle={previewStyle}
                     hideModeSwitch={true}
                     height="calc(100% - 10rem)"
+
+                    hooks={{
+                        addImageBlobHook: async(blob, callback) => {
+                            try{
+                                const imageUrl = await handleImageUpload(blob);
+                                callback(imageUrl, 'alt text');
+                            }catch(error) {
+                                console.error("이미지 업로드 실패");
+                            }
+                        }
+                    }}
+
                     theme={''} // '' & 'dark'
                     usageStatistics={false}
                     toolbarItems={toolbarItems}

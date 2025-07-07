@@ -1,5 +1,6 @@
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
+import { del } from '@vercel/blob';
 
 interface RequestBody {
     _id?: string;
@@ -34,7 +35,16 @@ export async function DELETE(request: Request) {
         if(article.flatform == 'scraping'){
             const url = article.url;
             const articleId = url.match(/article\/([a-f0-9]{24})/)[1];
-
+            const data = await db.collection('write').findOne({_id: new ObjectId(articleId)},{ projection: { images: 1 } })
+            if(data){
+                if(Array.isArray(data.images)){
+                    for (const url of data.images) {
+                        const path = url.replace('https://blob.vercel-storage.com/', '');
+                        await del(path);
+                    }
+                }
+            }
+              
             const result = await db.collection('write').deleteOne({_id: new ObjectId(articleId)});
         }
 

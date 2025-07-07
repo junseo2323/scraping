@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const db = client.db('scraping');
     
     try {
-        const { title, content, writer,writername } = await request.json();
+        const { title, content, writer,writername,images } = await request.json();
 
         if (!content || !writer) {
             return NextResponse.json({ error: "content와 writer 필드는 필수입니다." }, { status: 400 });
@@ -20,6 +20,7 @@ export async function POST(request: NextRequest) {
             title,
             content,
             writer,
+            images,
             createdAt: new Date(),
         };
         const result = await db.collection('write').insertOne(newArticle);
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
         const postArticleBody = {
             title,
             url: newUrl,
-            image: '',
+            image: images instanceof Array ? images[0] : '',
             subtitle: content,
             flatform: 'scraping',
             creator: writername,
