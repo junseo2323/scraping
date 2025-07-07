@@ -5,10 +5,9 @@ interface LikeDocument {
     comment: { userId: string; content: string }[];
 }
 
-export async function POST(request: Request) {
+export async function handleArticlePost(request: Request) {
     const client = await clientPromise;
     const db = client.db('scraping');
-
     try {
         const requestBody = await request.json();
         const {title,url,image,subtitle,flatform,creator,tag,user } = requestBody;
@@ -21,15 +20,19 @@ export async function POST(request: Request) {
             comment: []
         }
         const likeresult = await db.collection<LikeDocument>('likes').insertOne(newLikeDoc);
-
-        return new Response(JSON.stringify({ insertedId: result.insertedId, likerId: likeresult.insertedId }), {
-            headers: { 'Content-Type': 'application/json' },
-            status: 201,
-        });
-
+        return { success: true, message: 'Data processed successfully',insertedId: result.insertedId,likerId: likeresult.insertedId };
     } catch (error) {
-        console.error('Error connecting to database or performing operations:', error);
-        return new Response('Error connecting to database', { status: 500 });
+        return { success: false, message: 'Error connecting to database' };
     }
+}
+  
 
+export async function POST(request: Request) {
+    try {
+        const result = await handleArticlePost(request); 
+        return new Response(JSON.stringify(result), { status: 200 });
+      } catch (error) {
+        console.error('Error:', error);
+        return new Response(JSON.stringify({ error: 'Internal server error' }), { status: 500 });
+      }
 }

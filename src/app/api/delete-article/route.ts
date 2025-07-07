@@ -25,8 +25,19 @@ export async function DELETE(request: Request) {
             return new Response('Invalid _id parameter.', { status: 400 });
         }
 
+        const article = await db.collection('article').findOne({_id:objectId});
 
-        // Delete the document with the specified tagname
+        if (!article) {
+            return new Response('Article is already deleted', { status: 400 });
+        }
+
+        if(article.flatform == 'scraping'){
+            const url = article.url;
+            const articleId = url.match(/article\/([a-f0-9]{24})/)[1];
+
+            const result = await db.collection('write').deleteOne({_id: new ObjectId(articleId)});
+        }
+
         const result = await db.collection('article').deleteOne({ _id:objectId });
 
         if (result.deletedCount === 0) {

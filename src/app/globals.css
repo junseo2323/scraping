@@ -2,3 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+.toastui-editor-contents h1{
+    border-bottom: none;
+}
+
+.toastui-editor-contents h2{
+    border-bottom: none;
+}
+
+.toastui-editor-contents h3{
+    border-bottom: none;
+}

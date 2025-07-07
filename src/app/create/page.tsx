@@ -12,6 +12,7 @@ import useSWR from "swr";
 import { fetcher } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import {createArticleData,articleData} from "@/types/type"
+import ArticleEditor from "@/components/ArticleEditor";
 
 //Type
 type Inputs = {
@@ -22,14 +23,15 @@ type Inputs = {
 
 //CreateArticle
 export default function createArticle() {
-    const [url, setUrl] = useState<string>("")
-    const { data } = useSWR('api/get-metadata?url=' + url, fetcher)
-    const [windowState, setWindowState] = useState('online')
+    const [url, setUrl] = useState<string>("");
+    const { data } = useSWR('api/get-metadata?url=' + url, fetcher);
+    const [windowState, setWindowState] = useState('select');
 
     return (
         <div>
             <div className="px-5 md:px-80 pt-10">
                 {windowState === 'select' && <SelectType setWindowState={setWindowState} />}
+                {windowState === 'write' && <Write setWindowState={setWindowState} />}
                 {windowState === 'online' && <Online setWindowState={setWindowState} setUrl={setUrl} />}
                 {windowState === 'online-input' && <OnlineInput setWindowState={setWindowState} articleData={data} />}
             </div>
@@ -43,23 +45,45 @@ interface SelectTypeProps {
 }
 
 const SelectType: React.FC<SelectTypeProps> = ({ setWindowState }) => {
-    const onClick = () => {
+    const onClickOnline = () => {
         setWindowState('online')
+    }
+    const onClickWrite = () => {
+        setWindowState('write')
     }
     return (
         <div>
             <p className="font-black text-3xl">어떤 기록을 기록하시나요 ?</p>
             <p className="font-light text-sm pt-1">무엇을 선택해야 할지 모르겠어요</p>
-            <div className="grid grid-cols-2 place-items-center" onClick={onClick}>
-                <div className="pt-10">
+            <div className="grid grid-cols-2 place-items-center" >
+                <div className="pt-10" onClick={onClickOnline}>
                     <img src="img/create-article-img/online.png" className="w-[30vw]" />
                     <p className="pt-10 font-bold text-3xl text-center">온라인 기록</p>
                 </div>
-                <div className="pt-10">
+                <div className="pt-10" onClick={onClickWrite}>
                     <img src="img/create-article-img/offline.png" className="w-[30vw]" />
                     <p className=" font-bold pt-8 text-3xl text-center">손글씨 기록</p>
                 </div>
             </div>
+        </div>
+    )
+}
+
+//Write
+interface WriteTypeProps {
+    setWindowState: (value: string) => void
+}
+
+
+const Write: React.FC<WriteTypeProps> = ({ setWindowState }) => {
+
+    const { register, handleSubmit } = useForm<Inputs>()
+
+    return (
+        <div>
+            <p className="font-black text-3xl">새로운 기록물 만들기</p>
+            <p className="font-light text-sm pt-1">어떻게 해야할지 모르겠어요</p>
+            <ArticleEditor initialValue=''/>
         </div>
     )
 }
@@ -69,7 +93,6 @@ interface OnlineTypeProps {
     setWindowState: (value: string) => void,
     setUrl: (value: any) => void
 }
-
 
 
 const Online: React.FC<OnlineTypeProps> = ({ setWindowState, setUrl }) => {

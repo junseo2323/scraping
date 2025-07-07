@@ -65,7 +65,9 @@ const FeedArticle: React.FC<FeedArticleprops> = ({ articleData }) => {
         }
     };
 
-    const backgroundTmp = articleData.image[0].url || articleData.image || '';
+    const backgroundTmp = Array.isArray(articleData.image) 
+    ? articleData.image[0]?.url || '/img/article/default.jpg' 
+    : articleData.image || '/img/article/default.jpg';
     const backgroundImage = String(backgroundTmp)
     const flatformImage = `/img/flatform/${articleData.flatform}.png`
 
