@@ -106,9 +106,8 @@ const FeedArticle: React.FC<FeedArticleprops> = ({ articleData }) => {
                         <img referrerPolicy="no-referrer" className='rounded-t-3xl' src={backgroundImage} />
                     </div>
                     <div className='w-[100%] grid-rows-[0.5fr_1fr_0.5fr_0.5fr] px-3 py-8'>
-                        <div className='grid grid-cols-[1fr_0.5fr_0.5fr] pb-3'>
+                    <div className='grid grid-cols-[1.5fr_0.5fr] pb-3'>
                             <img className='py-2' src={flatformImage} width={32} />
-                            <div className='bg-[#D9D9D9] rounded-full w-10 h-10' />
                             <span className='py-2.5 pl-2 text-sm'>{articleData.creator}</span>
                         </div>
                         <p className='font-semibold text-xl h-14 overflow-clip'>{articleData.title}</p>

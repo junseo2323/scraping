@@ -8,8 +8,9 @@ import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import { api } from "@/utils/api";
 import { useAuth } from "@/context/AuthContext";
 import Modal from "react-modal"
- 
-import styles from './article.module.css';
+import useSWR from "swr";
+import Tag from '@/components/Tag';
+import { fetcher } from '@/utils/api';
 
 
 const likeFetcher = async (articleId: string, liker: string) => {
@@ -69,6 +70,8 @@ export default function WritenArticle(){
     const [writer, setWriter] = useState('');
     const [content, setContent] = useState('');
     const [createdAt, setCreatedAt] = useState('');
+    const [tags, setTags] = useState(['']);
+    const [tagList, setTagList] = useState<{tagname: string, color: string}[]>();
 
     const [isuserlike, setIsuserlike] = useState<boolean>(false);
     const [likecount, setLikecount] = useState<number>(0);
@@ -133,6 +136,7 @@ export default function WritenArticle(){
                 const day = String(date.getDate()).padStart(2, '0');
                 const formatted = `${year}년 ${month}월 ${day}일`;
                 setCreatedAt(formatted);
+                setTags(article.tags);
             }
 
             // Process likes and comments
@@ -154,8 +158,26 @@ export default function WritenArticle(){
         fetchData();
     }, [articleId, user?._id]);
 
+    const { data: tagData } = useSWR(user?._id ? '/api/get-tag/' + user?._id : null, fetcher)
+
     const viewerRef = useRef<Viewer>(null);
-   
+
+    useEffect(()=>{
+        const tagGenerator = () => {
+            if (!tagData || !tags) return;
+            let resultTag = []
+            for (let tmptag of tagData) {
+                if (tags.includes(tmptag.tagname)) {
+                    resultTag.push(tmptag)
+                }
+            }
+            console.log(resultTag);
+            return resultTag
+        }
+        const tmp = tagGenerator();
+        setTagList(tmp);
+    },[tagData, tags])
+
     return(
         <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
             <div>
@@ -170,10 +192,12 @@ export default function WritenArticle(){
                 <p className="font-bold">{writer}</p>
                 <p className="font-thin">{createdAt}</p>
             </div>
-            <div className="grid grid-cols-[0.2fr_0.2fr_0.2fr]   ">
-                <p>태그1</p>
-                <p>태그2</p>
-                <p>태그3</p>
+            <div className='py-2 grid grid-cols-[70px_70px_70px_70px] gap-y-2'>
+                        {
+                            (tagList !== undefined)&&tagList.map((i) => (
+                                <Tag key={i.tagname} text={i.tagname} color={i.color} />
+                            ))
+                        }
             </div>
             <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                 <div className='w-full'>

@@ -31,3 +31,7 @@
 .toastui-editor-main .toastui-editor-md-splitter {
     background-color: #ffc456 !important;
 }
+
+.toastui-editor-popup {
+    left: 50% !important;
+}

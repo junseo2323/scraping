@@ -46,7 +46,7 @@ const CreateTag:React.FC<CreateTagProps> = ({articletag,tagdata,setInitalData}) 
         return resultTag
     }
 
-    tagList = tagGenerator()
+    tagList = tagGenerator();
 
     return(
         <div className="pt-3 md:py-10">
@@ -68,6 +68,7 @@ interface AddTagProps {
     setInitalData : React.Dispatch<React.SetStateAction<createArticleData>>
 
 }
+
 const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
     const {user} = useAuth();
     const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher);
@@ -169,4 +170,142 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
     )
 }
 
-export default CreateTag
+interface MCreateTagProps {
+    tag: string[],
+    tagdata : [tag],
+    setTagdata : React.Dispatch<React.SetStateAction<string[]>>
+}
+export const MCreateTag:React.FC<MCreateTagProps> = ({tag, tagdata, setTagdata}) => {
+    let tagList:tag[];
+
+    const tagGenerator = () => {
+        let resultTag = []
+        console.log(tag);
+        if(tagdata && Array.isArray(tag)){
+            for (let tmptag of tagdata) {
+                if(tag && tag.includes(tmptag.tagname)){
+                    resultTag.push(tmptag)
+                }
+            } 
+        }
+        return resultTag
+    }
+
+    tagList = tagGenerator();
+
+    return(
+        <div className="mb-10">
+        <p className="">태그</p>
+        <div className='pt-2 pb-10 grid grid-cols-[70px_70px_70px_70px] gap-y-2'>
+            {
+                tagList.map((i)=>(
+                    <Tag key={i.tagname} text={i.tagname} color={i.color} />
+                ))
+            }
+        </div>
+        <MAddTag tag={tag} setTagdata={setTagdata}/>
+        </div>
+
+    )
+}
+
+interface MAddTagProps {
+    tag: string[],
+    setTagdata : React.Dispatch<React.SetStateAction<string[]>>
+}
+
+const MAddTag:React.FC<MAddTagProps> = ({tag,setTagdata}) => {
+    const {user} = useAuth();
+    const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher);
+    const [tagText, setTagText] = useState<string>('');
+    
+    const enterText = async() => {
+        if (!tagText) return;
+
+        const createColors = () => {
+            
+            let randomHex = Math.floor(Math.random() * 0xffffff).toString(16);
+            randomHex = `#${randomHex.padStart(6,'0')}`;
+            return randomHex;
+        }
+
+        const addData = {
+            userid: user?._id,
+            tagname: tagText,
+            color: createColors()
+        }
+
+        try{
+            await axios.post('api/post-tag',addData);
+            mutate();
+            selectTag({tagname:tagText,color:''});
+            setTagText('');    
+        }catch(error){
+            console.error(error);
+        }
+    }
+    const activeEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if(e.key === "Enter") {
+            e.preventDefault();
+            enterText();
+        }
+    }
+    const deleteActive = async(tagname:string) => {
+        selectTag({tagname:tagname,color:''});
+        try{
+            await axios.delete('api/delete-tag?tagname='+tagname);
+            mutate();
+        }catch(error){
+            console.error(error);
+        }
+    }
+
+    const selectTag = (i:tag) => {
+
+        if(tag.includes(i.tagname)){
+            const itemToFind = tag.filter((e)=> e !== i.tagname)
+            setTagdata(itemToFind)
+
+        } else {
+            const itemToFind:string[] = [...tag, i.tagname]
+            setTagdata(itemToFind)
+        }
+    }
+    return(
+        <div className="w-94 mr-5 lg:w-[500px] h-64 rounded-xl drop-shadow-2xl bg-white overflow-auto scrollbar-hide" >
+            <input 
+                type="text" 
+                onChange={(e:React.ChangeEvent<HTMLInputElement>) => {setTagText(e.target.value)}}
+                value={tagText}
+                onKeyDown={activeEnter}
+                className="sticky top-0 pl-5 bg-gray-200 w-[100%] rounded-t-xl h-12" />
+            <p className="text-gray-400 text-sm p-5">태그 선택 또는 생성</p>
+            <div className="px-5">
+            {
+                data && Array.isArray(data) &&(
+                    data.map((i: tag)=>(
+                        <div key={i.tagname} className="py-1">
+                            <button className="float-right"
+                                type="button"
+                                onClick={(e:React.MouseEvent<HTMLButtonElement>)=>{
+                                    e.stopPropagation();
+                                    if(e.detail === 1){
+                                        deleteActive(i.tagname)
+                                    }
+                                }}
+                            >삭제</button>
+                            <div onClick={()=>{
+                                selectTag(i);
+                            }}>
+                                <Tag text={i.tagname} color={i.color} />
+                            </div>
+                        </div>
+                    ))
+                )
+            }
+            </div>
+        </div>
+    )
+}
+
+export default CreateTag;

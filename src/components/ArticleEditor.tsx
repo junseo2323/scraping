@@ -7,13 +7,20 @@ import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { Inputbox } from './Inputbox';
 import { useRouter } from 'next/navigation';
+import useSWR from "swr";
+import { fetcher } from "@/utils/api";
+
+
 import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import Prism from 'prismjs';
+
+
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
 
 import '../app/globals.css';
+import { MCreateTag } from './CreateTag';
 
 //toastui-editor-md-preview
 interface ArticleEditorProps {
@@ -23,6 +30,7 @@ interface ArticleEditorProps {
 export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps) {
     const {user} = useAuth();
     const router = useRouter();
+    const { data } = useSWR(user?'api/get-tag/' + user?._id:null, fetcher);
 
     const editorRef = useRef<Editor>(null);
 
@@ -51,6 +59,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
     
     const [title, setTitle] = useState("");
     const [images, setImages] = useState<string[]>([]);
+    const [tags, setTags] = useState<string[]>([""]);
 
     const titleHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
@@ -64,7 +73,8 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                 content: content,
                 writer: user?._id,
                 writername: user?.nickname,
-                images: images
+                images: images,
+                tags: tags
             }
             try{
                 const res = await axios.post('/api/write',body);
@@ -76,6 +86,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
         }
     }
 
+    //Markdown 사진 핸들러
     const handleImageUpload = async (blob: Blob): Promise<string> => {
         const formData = new FormData();
         formData.append('file', blob);
@@ -120,7 +131,13 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
             </label>
             </div>
 
-            <div className='w-[60vw] h-[1000px]'>
+            <MCreateTag 
+                tag={tags}
+                tagdata={data}
+                setTagdata={setTags}
+            />
+
+            <div className='md:w-[60vw] h-[1000px]'>
                 <Editor
                     ref={editorRef}
                     initialValue={initialValue || ' '} 
@@ -149,7 +166,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
             </div>
             <button
                 onClick={handleSave}
-                className="float-right mr-4 my-5 w-20 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
+                className="float-right mr-4 my-5 w-28 h-12 md:w-36 text-sm md:text-3xl md:h-16 rounded-xl bg-[#6083FF] font-black  text-white">
                 작성하기
             </button>
         </div>

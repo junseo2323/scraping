@@ -26,12 +26,12 @@ type Inputs = {
 //CreateArticle
 export default function createArticle() {
     const [url, setUrl] = useState<string>("");
-    const { data } = useSWR('api/get-metadata?url=' + url, fetcher);
+    const { data } = useSWR(url?'api/get-metadata?url=' + url : null, fetcher);
     const [windowState, setWindowState] = useState('select');
 
     return (
         <div>
-            <div className="px-5 md:px-80 pt-10">
+            <div className="px-5 md:pl-80 pt-10">
                 {windowState === 'select' && <SelectType setWindowState={setWindowState} />}
                 {windowState === 'write' && <Write setWindowState={setWindowState} />}
                 {windowState === 'online' && <Online setWindowState={setWindowState} setUrl={setUrl} />}
@@ -54,16 +54,16 @@ const SelectType: React.FC<SelectTypeProps> = ({ setWindowState }) => {
         setWindowState('write')
     }
     return (
-        <div>
+        <div className="w-full">
             <p className="font-black text-3xl">어떤 기록을 기록하시나요 ?</p>
             <p className="font-light text-sm pt-1">무엇을 선택해야 할지 모르겠어요</p>
             <div className="grid grid-cols-2 place-items-center" >
                 <div className="pt-10" onClick={onClickOnline}>
-                    <img src="img/create-article-img/online.png" className="w-[30vw]" />
+                    <img src="/img/create-article-img/online.png" className="w-[30vw]" />
                     <p className="pt-10 font-bold text-3xl text-center">온라인 기록</p>
                 </div>
                 <div className="pt-10" onClick={onClickWrite}>
-                    <img src="img/create-article-img/offline.png" className="w-[30vw]" />
+                    <img src="/img/create-article-img/offline.png" className="w-[30vw]" />
                     <p className=" font-bold pt-8 text-3xl text-center">손글씨 기록</p>
                 </div>
             </div>

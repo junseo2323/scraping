@@ -35,9 +35,8 @@ const Article: React.FC<Articleprops> = ({ articleData, tagData }) => {
                     <img referrerPolicy="no-referrer" className='rounded-t-3xl' src={backgroundImage} />
                 </div>
                 <div className='grid grid-rows-[1.5fr_1.5fr_0.5fr_1fr] px-3 py-[20px]'>
-                    <div className='grid grid-cols-[2fr_0.5fr_0.5fr] pb-7'>
+                <div className='grid grid-cols-[1.5fr_0.5fr] pb-3'>
                         <img className='py-2' src={flatformImage} width={32} />
-                        <div className='bg-[#D9D9D9] rounded-full w-10 h-10' />
                         <span className='py-2.5 pl-2 text-sm'>{articleData.creator}</span>
                     </div>
                     <p className='font-semibold text-2xl '>{articleData.title}</p>

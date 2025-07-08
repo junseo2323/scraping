@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const db = client.db('scraping');
     
     try {
-        const { title, content, writer,writername,images } = await request.json();
+        const { title, content, writer,writername,images,tags } = await request.json();
 
         if (!content || !writer) {
             return NextResponse.json({ error: "content와 writer 필드는 필수입니다." }, { status: 400 });
@@ -21,6 +21,7 @@ export async function POST(request: NextRequest) {
             content,
             writer,
             images,
+            tags,
             createdAt: new Date(),
         };
         const result = await db.collection('write').insertOne(newArticle);
@@ -33,7 +34,7 @@ export async function POST(request: NextRequest) {
             subtitle: content,
             flatform: 'scraping',
             creator: writername,
-            tag: [], //추후 태그를 넣을 수 있게 수정할 것 .
+            tag: tags, //추후 태그를 넣을 수 있게 수정할 것 .
             user:writer
         }
         const res = await handleArticlePost(new Request(process.env.NEXT_PUBLIC_SCRAPING_URL+'/api/post-aritcle', {
