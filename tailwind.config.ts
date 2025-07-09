@@ -19,8 +19,15 @@ const config: Config = {
       gridTemplateColumns: {
         'auto-fit': 'repeat(auto-fit, minmax(150px, 1fr))',
       },
-    },
+      screens: {
+        'feed_md': '900px',
+        'feed_lg': '1100px',
+        'feed_xl': '1280px',
+        'feed_2xl': '1536px',
+      }
+    }
   },
   plugins: [require("tailwind-scrollbar-hide")],
 };
 export default config;
+

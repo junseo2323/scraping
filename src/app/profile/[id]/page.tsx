@@ -109,31 +109,31 @@ export default function Profile() {
     },[isModify])
 
     return(
-        <div className="grid grid-rows-[0.5fr_1fr_0.1fr]">
-            <div className="w-[40vw] border-r-2 border-[#D0D0D0]">
+        <div className="grid grid-rows-[0.5fr_1fr_0.1fr] px-5">
+            <div className="w-[80vw] md:w-[40vw] border-r-2 border-[#D0D0D0]">
                 <p className="text-[#D0D0D0] font-thin text-sm">더블클릭하면 수정할 수 있어요.</p>
                 <p>기록한 글 {countArticle}개</p>
                 {
                     isModify ? 
-                        <>
+                        <div className="grid gird-rows-3">
                             <input 
                                 onChange={(e)=>{
                                     setUsername(e.target.value);
                                 }}
                                 defaultValue={users?.username}
-                                className="text-[48px] font-bold w-[20vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
+                                className="text-[48px] font-bold w-[70vw] md:w-[30vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
                             />
                             <input 
                                 onChange={(e)=>{
                                     setSubtitle(e.target.value);
                                 }}
                                 defaultValue={users?.subtitle}
-                                className="text-[32px] font-bold w-[20vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
+                                className="text-[32px] font-bold w-[70vw] md:w-[30vw] border-b-2 border-gray-600 bg-transparent text-black text-lg py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
                             />
                             <button 
-                            className="pl-10 font-bold text-[#ffa806]"
+                            className="pl-32 md:pl-10 font-bold text-[#ffa806]"
                             onClick={onSubmitHandle}>저장하기</button>
-                        </>:
+                        </div>:
                         <>
                             <p className="text-[48px] font-bold" onDoubleClick={doubleClickhandle}>{users?.username}</p>
                             <p className="text-[32px] font-bold" onDoubleClick={doubleClickhandle}>{users?.subtitle}</p>

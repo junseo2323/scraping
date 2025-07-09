@@ -16,7 +16,8 @@ const Navigation = () => {
     if (hideOn.includes(path)) return null;
 
     return(
-        <div>
+            user &&
+            <div>
             <div className="grid grid-cols-2">
                 <Logo />
                 <div className="flex justify-end pr-4">
@@ -67,7 +68,6 @@ const Navigation = () => {
                 </div>
             </div>
         </div>
-
     )
 }
 

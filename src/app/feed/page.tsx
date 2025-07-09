@@ -32,7 +32,7 @@ export default function Feed() {
     
     return(
         <div style={{maxWidth: '100vw'}}>
-            <div className="flex gap-x-4 overflow-x-auto pl-32">
+            <div className="grid grid-cols-2 feed_md:grid-cols-3 feed_lg:grid-cols-4 gap-x-8 px-8 feed_md:px-16 feed_lg:px-32 gap-y-5">
             {
                 (!articleisLoading && articleMap) && articleMap.map((i: createArticleData) => (
                     <FeedArticle key={i._id} articleData={i}  />
