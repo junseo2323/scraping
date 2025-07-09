@@ -108,7 +108,7 @@ const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
     const deleteActive = async(tagname:string) => {
         selectTag({tagname:tagname,color:''});
         try{
-            await axios.delete('api/delete-tag?tagname='+tagname);
+            await axios.delete('api/delete-tag?tagname='+tagname+"&userid="+user?._id);
             mutate();
         }catch(error){
             console.error(error);
@@ -253,7 +253,7 @@ const MAddTag:React.FC<MAddTagProps> = ({tag,setTagdata}) => {
     const deleteActive = async(tagname:string) => {
         selectTag({tagname:tagname,color:''});
         try{
-            await axios.delete('api/delete-tag?tagname='+tagname);
+            await axios.delete('api/delete-tag?tagname='+tagname+"&userid="+user?._id);
             mutate();
         }catch(error){
             console.error(error);

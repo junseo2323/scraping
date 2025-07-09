@@ -4,8 +4,9 @@ import { MiniArticle } from "@/components/article";
 import { useAuth } from "@/context/AuthContext";
 import { fetcher } from "@/utils/api";
 import axios from "axios";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import useSWR from "swr";
 
 interface user {
@@ -15,6 +16,7 @@ interface user {
 }
 
 export default function Profile() {
+    const router = useRouter();
 
     const {user,configToken} = useAuth();
     const { id } = useParams() as { id: string };
@@ -35,6 +37,35 @@ export default function Profile() {
         if(user?._id === id){
             setIsModify(true);
         }
+    }
+
+    const deleteFunction = async() => {
+        const body = {_id: user?._id};
+        const res = await axios.post('/api/delete-user',body);
+    }
+
+    const onDeleteHandle = () => {
+        //Tag, Article, Write, user에서 흔적 지우기 -> 그냥 user에서 처리하자
+        Swal.fire({
+            title: '탈퇴하시겠습니까?',
+            text: '당신의 노트를 삭제합니다.',
+            icon: 'warning',
+
+            showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+            confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+            cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+            confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+
+        }).then(result => {
+            // 만약 Promise리턴을 받으면,
+            if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+                deleteFunction();                
+                router.push('/start');
+            }
+        })
+
+        
     }
 
     const onSubmitHandle = async() => {
@@ -78,7 +109,7 @@ export default function Profile() {
     },[isModify])
 
     return(
-        <div className="grid grid-rows-[0.5fr_1fr]">
+        <div className="grid grid-rows-[0.5fr_1fr_0.1fr]">
             <div className="w-[40vw] border-r-2 border-[#D0D0D0]">
                 <p className="text-[#D0D0D0] font-thin text-sm">더블클릭하면 수정할 수 있어요.</p>
                 <p>기록한 글 {countArticle}개</p>
@@ -124,6 +155,9 @@ export default function Profile() {
                     }
                 </div>
             </div>
+            <button 
+            className="font-bold text-[#ffa806] text-left"
+            onClick={onDeleteHandle}>탈퇴하기</button>
         </div>
     )
 }

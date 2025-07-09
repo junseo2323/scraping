@@ -9,14 +9,15 @@ export async function DELETE(request: Request) {
         // Parse the URL or request body for the tagname
         const url = new URL(request.url);
         const tagname = url.searchParams.get('tagname');
+        const userid = url.searchParams.get('userid');
 
-        if (!tagname) {
+        if (!tagname || !userid) {
             return new Response('Missing tagname parameter.', { status: 400 });
         }
 
         // Delete the document with the specified tagname
-        const result = await db.collection<Tag>('tags').deleteOne({ tagname });
-
+        const result = await db.collection<Tag>('tags').deleteOne({ tagname,userid });
+        console.log(result);
         if (result.deletedCount === 0) {
             return new Response('No document found with the specified tagname.', { status: 404 });
         }
