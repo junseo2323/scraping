@@ -108,8 +108,9 @@ const FeedArticle: React.FC<FeedArticleprops> = ({ articleData }) => {
                     <div className='w-[100%] grid-rows-[0.5fr_1fr_0.5fr_0.5fr] px-3 py-8'>
                     <div className='grid grid-cols-[1.5fr_0.5fr] pb-3'>
                             <img className='py-2' src={flatformImage} width={32} />
-                            <span className='py-2.5 pl-2 text-sm'>{articleData.creator}</span>
-                        </div>
+                            <Link href={'/profile/'+articleData.user} className='py-2.5 justify-self-center text-sm'>
+                                <p className='pt-[1.5px]'>{articleData.creator}</p>
+                            </Link>                        </div>
                         <p className='font-semibold text-xl h-14 overflow-clip'>{articleData.title}</p>
                         <p className='font-light break-all text-sm text-gray-400 h-14 overflow-scroll scrollbar-hide'>{articleData.subtitle}</p>
 

@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 import { Noto_Sans } from 'next/font/google'
 import { Noto_Sans_KR } from 'next/font/google'
@@ -24,6 +26,8 @@ export default function RootLayout({
     return (
         <html lang="en" style={{ overflowX: 'hidden' }}>
             <body className={inter.className}>
+                <SpeedInsights/>
+                <Analytics/>
                 <AuthProvider>
                     <Navigation />
                     {children}

@@ -15,14 +15,15 @@ interface user {
 }
 
 export default function Profile() {
-    const {configToken} = useAuth();
+
+    const {user,configToken} = useAuth();
     const { id } = useParams() as { id: string };
 
     const { data: articleData, error: articleError, isLoading: articleisLoading } = useSWR(id ? '/api/get-article/' + id : null, fetcher)
     const { data: tagData, error: tagError, isLoading: tagisLoading } = useSWR(id ? '/api/get-tag/' + id : null, fetcher)
 
 
-    const [user, setUser] = useState<user>();
+    const [users, setUsers] = useState<user>();
     const [countArticle, setCountArticle] = useState<number>();
     const [isModify, setIsModify] = useState<boolean>(false);
 
@@ -31,14 +32,16 @@ export default function Profile() {
 
 
     const doubleClickhandle = () => {
-        setIsModify(true);
+        if(user?._id === id){
+            setIsModify(true);
+        }
     }
 
     const onSubmitHandle = async() => {
         const body = {
             userId : id,
-            username : username === ''?user?.username:username,
-            subtitle : subtitle === ''?user?.subtitle:subtitle
+            username : username === ''?users?.username:username,
+            subtitle : subtitle === ''?users?.subtitle:subtitle
         };
         const res = await axios.patch('/api/patch-user',body);
         configToken();
@@ -63,7 +66,7 @@ export default function Profile() {
 
         const getUser = async() => {
             const res = await fetchUserById(id);
-            setUser({
+            setUsers({
                 username: res.username,
                 email: res.email, 
                 subtitle: res.subtitle        
@@ -86,14 +89,14 @@ export default function Profile() {
                                 onChange={(e)=>{
                                     setUsername(e.target.value);
                                 }}
-                                defaultValue={user?.username}
+                                defaultValue={users?.username}
                                 className="text-[48px] font-bold w-[20vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
                             />
                             <input 
                                 onChange={(e)=>{
                                     setSubtitle(e.target.value);
                                 }}
-                                defaultValue={user?.subtitle}
+                                defaultValue={users?.subtitle}
                                 className="text-[32px] font-bold w-[20vw] border-b-2 border-gray-600 bg-transparent text-black text-2xl py-1 focus:border-transparent focus:outline-none focus:ring-0 placeholder-transparent peer"
                             />
                             <button 
@@ -101,11 +104,11 @@ export default function Profile() {
                             onClick={onSubmitHandle}>저장하기</button>
                         </>:
                         <>
-                            <p className="text-[48px] font-bold" onDoubleClick={doubleClickhandle}>{user?.username}</p>
-                            <p className="text-[32px] font-bold" onDoubleClick={doubleClickhandle}>{user?.subtitle}</p>
+                            <p className="text-[48px] font-bold" onDoubleClick={doubleClickhandle}>{users?.username}</p>
+                            <p className="text-[32px] font-bold" onDoubleClick={doubleClickhandle}>{users?.subtitle}</p>
                         </>
                 }
-                <p>{user?.email}</p>
+                <p>{users?.email}</p>
             </div>
 
             <div className="py-5">
