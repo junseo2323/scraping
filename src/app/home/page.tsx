@@ -19,7 +19,7 @@ export default function home() {
     const { user, isLoading } = useAuth();
 
     const { data: articleData, error: articleError, isLoading: articleisLoading } = useSWR(user ? 'api/get-article/' + user._id : null, fetcher)
-    const { data: tagData, error: tagError, isLoading: tagisLoading } = useSWR(user ? 'api/get-tag/' + user._id : null, fetcher)
+    const { data: tagData, error: tagError, isLoading: tagisLoading } = useSWR(user ? '/api/get-tag/' + user._id : null, fetcher)
 
     const [tagArticlesMap, setTagArticlesMap] = useState<{ [tagname: string]: any[] }>({});
     const [loadingTags, setLoadingTags] = useState<{ [tagname: string]: boolean }>({});
@@ -41,7 +41,7 @@ export default function home() {
 
     useEffect(() => {
         if (!isLoading && !user) {
-            router.push('/start');
+            router.push('/feed');
         }
     }, [user, isLoading, router]);
 

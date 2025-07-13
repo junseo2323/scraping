@@ -22,7 +22,7 @@ type Inputs = {
 
 const ModifyArticle: React.FC<ModifyArticleType> = ({ ismordal, setIsmordal, articleData }) => {
     const { user } = useAuth();
-    const { data } = useSWR('api/get-tag/' + user?._id);
+    const { data } = useSWR('/api/get-tag/' + user?._id);
     const [initaldata, setInitalData] = useState(articleData);
     const { register, handleSubmit, watch } = useForm<Inputs>();
     useEffect(() => {

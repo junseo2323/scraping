@@ -9,9 +9,9 @@ export default function Home() {
     const {user} = useAuth();
     useEffect(()=>{
         if(user){
-            router.push('/home');
+            router.push('/feed');
         } else{
-            router.push('/start');
+            router.push('/feed');
         }
     },[user]);
   

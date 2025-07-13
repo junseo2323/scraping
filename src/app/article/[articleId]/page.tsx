@@ -11,6 +11,7 @@ import Modal from "react-modal"
 import useSWR from "swr";
 import Tag from '@/components/Tag';
 import { fetcher } from '@/utils/api';
+import ArticleEditor from '@/components/ArticleEditor';
 
 
 const likeFetcher = async (articleId: string, liker: string) => {
@@ -73,6 +74,7 @@ export default function WritenArticle(){
     const [tags, setTags] = useState(['']);
     const [tagList, setTagList] = useState<{tagname: string, color: string}[]>();
 
+    const [isModify, setIsModify] = useState<boolean>(false);
     const [isuserlike, setIsuserlike] = useState<boolean>(false);
     const [likecount, setLikecount] = useState<number>(0);
     const [commentcount, setCommentcount] = useState<number>(0);
@@ -156,13 +158,15 @@ export default function WritenArticle(){
         };
 
         fetchData();
-    }, [articleId, user?._id]);
+    }, [articleId, user?._id, isModify]);
 
     const { data: tagData } = useSWR(user?._id ? '/api/get-tag/' + user?._id : null, fetcher)
 
     const viewerRef = useRef<Viewer>(null);
 
     useEffect(()=>{
+        console.log(tagData);
+        
         const tagGenerator = () => {
             if (!tagData || !tags) return;
             let resultTag = []
@@ -179,13 +183,34 @@ export default function WritenArticle(){
     },[tagData, tags])
 
     return(
+        isModify?
+        <div>
+            <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
+                <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
+                    <div className='w-full'>
+                        <ArticleEditor 
+                            initialValue = {content}
+                            initialTitle = {title}
+                            isModify = {true}
+                            setIdModify = {setIsModify}
+                            modifyTag = {tags}
+                            modifyId = {articleId}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>:
         <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
             <div>
                 <button onClick={onClickHandle}>좋아요 {likecount}</button>
                 <button className='pl-5'
                     onClick={() => {
                         
-                    }}>댓글 {commentcount}</button>
+                }}>댓글 {commentcount}</button>
+                <button className='pl-5'
+                    onClick={()=>{
+                        setIsModify(true);
+                }}>수정하기</button>
             </div>
             <p className="font-bold text-4xl">{title}</p>
             <div className="grid grid-cols-[0.5fr_1fr]">
@@ -193,11 +218,11 @@ export default function WritenArticle(){
                 <p className="font-thin">{createdAt}</p>
             </div>
             <div className='py-2 grid grid-cols-[70px_70px_70px_70px] gap-y-2'>
-                        {
-                            (tagList !== undefined)&&tagList.map((i) => (
-                                <Tag key={i.tagname} text={i.tagname} color={i.color} />
-                            ))
-                        }
+                    {
+                        (tagList !== undefined)&&tagList.map((i) => (
+                            <Tag key={i.tagname} text={i.tagname} color={i.color} />
+                        ))
+                    }
             </div>
             <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                 <div className='w-full'>

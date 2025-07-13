@@ -71,7 +71,7 @@ interface AddTagProps {
 
 const AddTag:React.FC<AddTagProps> = ({articletag,setInitalData}) => {
     const {user} = useAuth();
-    const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher);
+    const {data,error,isLoading,mutate} = useSWR('/api/get-tag/'+user?._id,fetcher);
     const [tagText, setTagText] = useState<string>('');
     
     const enterText = async() => {
@@ -216,7 +216,7 @@ interface MAddTagProps {
 
 const MAddTag:React.FC<MAddTagProps> = ({tag,setTagdata}) => {
     const {user} = useAuth();
-    const {data,error,isLoading,mutate} = useSWR('api/get-tag/'+user?._id,fetcher);
+    const {data,error,isLoading,mutate} = useSWR('/api/get-tag/'+user?._id,fetcher);
     const [tagText, setTagText] = useState<string>('');
     
     const enterText = async() => {

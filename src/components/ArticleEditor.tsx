@@ -26,12 +26,17 @@ import Swal from 'sweetalert2';
 //toastui-editor-md-preview
 interface ArticleEditorProps {
     initialValue?: string;
+    initialTitle?: string;
+    isModify?: boolean;
+    setIdModify?: React.Dispatch<React.SetStateAction<boolean>>
+    modifyTag?: string[];
+    modifyId?: string;
 }
 
-export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps) {
+export default function ArticleEditor({ initialValue = ' ', initialTitle = ' ', isModify = false, setIdModify, modifyTag = [''], modifyId = '' }:ArticleEditorProps) {
     const {user} = useAuth();
     const router = useRouter();
-    const { data } = useSWR(user?'api/get-tag/' + user?._id:null, fetcher);
+    const { data } = useSWR(user?'/api/get-tag/' + user?._id:null, fetcher);
 
     const editorRef = useRef<Editor>(null);
 
@@ -60,7 +65,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
     
     const [title, setTitle] = useState("");
     const [images, setImages] = useState<string[]>([]);
-    const [tags, setTags] = useState<string[]>([""]);
+    const [tags, setTags] = useState<string[]>(modifyTag);
 
     const titleHandle = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value)
@@ -69,20 +74,38 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
     const saveFunction = async() => {
         if(editorRef.current) {
             const content = editorRef.current.getInstance().getMarkdown();
-            const body =  {
-                title: title,
-                content: content,
-                writer: user?._id,
-                writername: user?.nickname,
-                images: images,
-                tags: tags
+
+            if(isModify){
+                const body = {
+                    title: title=='' ? initialTitle : title,
+                    content: content,
+                    images: images,
+                    tags: tags
+                }
+                try{
+                    const res = await axios.post('/api/write/'+modifyId,body);
+                    const newUrl = res.data.articleUrl;
+                    setIdModify?.(false);
+                    router.push(newUrl);
+                }catch(error){
+                    console.error(error);
+                }
             }
-            try{
-                const res = await axios.post('/api/write',body);
-                const newUrl = res.data.articleUrl;
-                router.push(newUrl);
-            }catch(error){
-                console.error(error);
+            else {
+                const body =  {
+                    title: title,
+                    content: content,
+                    writer: user?._id,
+                    writername: user?.nickname,
+                    images: images,
+                    tags: tags
+                }
+                try{
+                    const res = await axios.post('/api/write',body);
+
+                }catch(error){
+                    console.error(error);
+                }
             }
         }
     }
@@ -142,6 +165,7 @@ export default function ArticleEditor({ initialValue = ' ' }:ArticleEditorProps)
                 placeholder='제목'
                 id='제목'
                 name='제목'
+                defaultValue={initialTitle}
                 onChange={titleHandle}
                 required
             />

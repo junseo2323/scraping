@@ -129,7 +129,7 @@ const OnlineInput: React.FC<OnlineInputTypeProps> = ({ setWindowState, articleDa
     const { user } = useAuth();
 
     const { register, handleSubmit, setValue, watch } = useForm<Inputs>()
-    const { data, error, isLoading, mutate } = useSWR('api/get-tag/' + user?._id, fetcher)
+    const { data, error, isLoading, mutate } = useSWR('/api/get-tag/' + user?._id, fetcher)
 
     const [initaldata, setInitaldata] = useState<createArticleData>({
         _id: '',
