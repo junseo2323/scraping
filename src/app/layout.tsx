@@ -27,6 +27,7 @@ export default function RootLayout({
         <html lang="en" style={{ overflowX: 'hidden' }}>
             <head>
                 <link rel="manifest" href="/manifest.json" />
+                <meta name="google-site-verification" content="lVeoww_Qsl09sLaSLcUP2h7_O_1HdFGEmDXCy2jVAZI" />
             </head>
             <body className={inter.className}>
                 <SpeedInsights/>

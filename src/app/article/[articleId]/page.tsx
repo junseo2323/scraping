@@ -12,6 +12,7 @@ import useSWR from "swr";
 import Tag from '@/components/Tag';
 import { fetcher } from '@/utils/api';
 import ArticleEditor from '@/components/ArticleEditor';
+import Head from 'next/head';
 
 
 const likeFetcher = async (articleId: string, liker: string) => {
@@ -64,7 +65,7 @@ export default function WritenArticle(){
 
     const url = process.env.NEXT_PUBLIC_SCRAPING_URL+'/article/'+articleId;
 
-    
+    const [image, setImage] = useState([]);
     
     const [articleData, setArticleData] = useState();
     const [title, setTitle] = useState('');
@@ -129,6 +130,7 @@ export default function WritenArticle(){
 
             // Process article details
             if (article) {
+                setImage(article.image);
                 setContent(article.content);
                 setTitle(article.title);
                 fetchUsernames(article.writer);
@@ -166,7 +168,7 @@ export default function WritenArticle(){
 
     useEffect(()=>{
         console.log(tagData);
-        
+
         const tagGenerator = () => {
             if (!tagData || !tags) return;
             let resultTag = []
@@ -200,6 +202,15 @@ export default function WritenArticle(){
                 </div>
             </div>
         </div>:
+        <>
+        <Head>
+            <title>Scraping! - {title}</title>
+            <meta name="description" content={content} />
+            <meta name="robots" content="index, follow" />
+            <meta property="og:title" content={title} />
+            <meta property="og:description" content={content} />
+            <meta property="og:image" content={image?image[0]:''} />
+        </Head>
         <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
             <div>
                 <button onClick={onClickHandle}>좋아요 {likecount}</button>
@@ -243,6 +254,7 @@ export default function WritenArticle(){
                 </div>
             </div>
         </div>
+        </>
     )
 }
 
