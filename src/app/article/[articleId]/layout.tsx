@@ -2,9 +2,10 @@
 import axios from 'axios';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation'; // 데이터를 찾지 못할 경우 처리
+import { use } from "react";
 
-export async function generateMetadata({ params }: { params: { articleId: string } }): Promise<Metadata> {
-  const { articleId } = await params;
+export async function generateMetadata({params}: {params: Promise<{ articleId: string }>}): Promise<Metadata> {
+    const { articleId } = use(params);
 
   // 여기서 API 호출이나 DB 쿼리로 해당 articleId의 정보를 가져온다.
   const article = await fetchArticleById(articleId);
