@@ -102,6 +102,8 @@ export default function ArticleEditor({ initialValue = ' ', initialTitle = ' ', 
                 }
                 try{
                     const res = await axios.post('/api/write',body);
+                    const newUrl = res.data.articleUrl;
+                    router.push(newUrl);
 
                 }catch(error){
                     console.error(error);
