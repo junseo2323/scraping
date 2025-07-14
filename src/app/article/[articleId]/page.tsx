@@ -2,7 +2,8 @@
 
 import { useParams } from 'next/navigation';
 import dynamic from "next/dynamic";
-const Viewer = dynamic(() => import("@toast-ui/react-editor").then(mod => mod.Viewer), { ssr: false });
+const ArticleViewer = dynamic(() => import("@/components/ArticleViewer"), 
+{ ssr: false });
 
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
@@ -167,7 +168,7 @@ export default function WritenArticle(){
 
     const { data: tagData } = useSWR(user?._id ? '/api/get-tag/' + user?._id : null, fetcher)
 
-    const viewerRef = useRef<Viewer>(null);
+    const viewerRef = useRef<any>(null);
 
     useEffect(()=>{
         console.log(tagData);
@@ -241,10 +242,9 @@ export default function WritenArticle(){
             </div>
             <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                 <div className='w-full'>
-                    <Viewer
-                        key={content}
-                        ref={viewerRef}
-                        initialValue={content}
+                    <ArticleViewer
+                        content={content}
+                        editorRef={viewerRef}
                     />
                 </div>
                 <div className='mr-10'>

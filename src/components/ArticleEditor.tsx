@@ -1,10 +1,6 @@
 "use client";
 
-import dynamic from 'next/dynamic';
-const Editor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Editor), {
-    ssr: false,
-});
-
+import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import React, { FormEventHandler, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
