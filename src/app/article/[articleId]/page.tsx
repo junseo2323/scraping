@@ -15,7 +15,9 @@ import useSWR from "swr";
 import Tag from '@/components/Tag';
 import { fetcher } from '@/utils/api';
 
-import ArticleEditor from '@/components/ArticleEditor';
+const ArticleEditor = dynamic(() => import("@/components/ArticleEditor"), 
+{ ssr: false });
+
 import Head from 'next/head';
 
 
