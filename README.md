@@ -1,111 +1,95 @@
-# Scraping - 웹 콘텐츠 스크랩 및 아카이빙 서비스
+ ## 화면 구성
 
-Scraping은 사용자가 웹에서 원하는 콘텐츠(블로그, 뉴스, 유튜브 등)를 스크랩하여 개인화된 공간에 저장하고, 태그를 이용해 손쉽게 관리할 수 있도록 돕는 서비스입니다. 사용자 인증을 통해 자신만의 콘텐츠 아카이브를 만들고, 좋아요나 댓글 같은 소셜 기능을 통해 다른 사용자와 소통할 수 있습니다.
+| ![시작화면](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/start-Cclt86Q9C4hJW6ChdGBxdKnhS4Hfx6.png) | ![로그인](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/login-tv0UxJVmHwE0816zWPQT8nmpqOMq3A.gif) | ![프로필](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/Profile-2muPIsQzgrxiizQTaFBoAbQipkKiJn.png) |
+|:--:|:--:|:--:|
+| 시작화면 | 로그인 | 프로필 |
+
+| ![손글씨 기록](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/freecompress-%EC%86%90%EA%B8%80%EC%94%A8%EA%B8%B0%EB%A1%9D-qCKJZ0864WjOfwUZyktpTVasa2eG5y.gif) | ![온라인 기록](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/%EC%98%A8%EB%9D%BC%EC%9D%B8%EA%B8%B0%EB%A1%9D-tSVNvRWcF2nPkORvk1J6JUTM2d2i0x.gif) | ![홈 화면](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/%ED%99%88%ED%99%94%EB%A9%B4-NheJDnOnDkZcyFfp8obfSo08YBDhYJ.gif) |
+|:--:|:--:|:--:|
+| 손글씨 기록 | 온라인 기록 | 홈 화면 |
+
+| ![피드 화면_PC버전](https://nr38fsf9m048ia4h.public.blob.vercel-storage.com/PC_%ED%94%BC%EB%93%9C-MJFvpyMdmjp9PaglgSX64AShm4lNBm.gif) |  |  |
+|:--:|:--:|:--:|
+| 피드 화면_PC버전 |  |  |
+
+
+## 📚 Scraping!
+## 온라인 기록 플랫폼
+
+### 🔍 프로젝트 개요
+
+> “온라인에서 만나는, 거인의 어깨 위 기록들”
+> 
+
+**Scraping**은 사용자가 온라인과 오프라인에서 접한 글, 정보, 생각들을 손쉽게 기록하고, 정리하고, 공유할 수 있는 **디지털 기록 플랫폼**입니다. 빠른 화면 전환, 간결한 UX, 다양한 스크랩 수단을 통해 사용자의 기록 경험을 혁신합니다.
 
 ---
 
-## 🚀 주요 기능
+### 🎯 대상 사용자
 
-- **사용자 인증**:
-  - 이메일과 비밀번호를 이용한 회원가입 및 로그인
-  - JWT (JSON Web Token) 기반의 안전한 인증 세션 관리
+- 온라인 글을 읽고 기록하고 싶은 모든 사용자
+- 지식을 정리하고 공유하며 성장하고자 하는 독서가, 작가, 연구자 등
 
-- **콘텐츠 스크랩**:
-  - URL만으로 웹 페이지의 메타데이터(제목, 설명, 이미지 등)를 자동으로 추출
-  - Naver Blog, YouTube 등 특정 플랫폼에 대한 맞춤 스크래핑 지원
-  - 사용자가 직접 글을 작성하고 저장하는 기능
+---
 
-- **아티클 관리**:
-  - 스크랩하거나 작성한 아티클을 생성, 조회, 수정, 삭제
-  - 저장된 모든 아티클 목록을 확인하고 관리
+### 🛠 주요 기능
 
-- **태그 시스템**:
-  - 아티클에 여러 태그를 추가하여 콘텐츠를 체계��으로 분류
-  - 사용자별로 태그를 생성, 조회, 삭제
+### 1. **회원 시스템**
 
-- **소셜 기능**:
-  - 각 아티클에 '좋아요'를 누르거나 취소하는 기능
-  - 아티클에 댓글을 작성, 수정, 삭제하여 의견 공유
+- **OAuth 로그인** 지원 ([예정] Kakao)
+- 나만의 **온라인 책장** 생성
+- 다른 사용자의 기록 열람 및 공유 기능
+
+### 2. **온라인 글 스크래핑**
+
+- **링크 기반** 저장으로 간편한 기록
+- 저장 시 메모, 기분, 상황 등을 함께 입력 가능
+- 태그 기반 분류 기능
+
+### 3. 손글씨 **기록 기능**
+
+- **독서노트, 일기** 등 직접 생성한 기록들을 저장 가능
+
+---
+
+### 🚀 문제 해결 방식
+
+| 문제 | 해결 방안 |
+| --- | --- |
+| 복잡한 UX와 느린 화면 전환 | **빠른 전환**과 **간결한 UI/UX**로 해결 |
+| - | **온라인 통합 기록장** 구축 |
+| 지식의 단절 | **커뮤니티와 공유 기능**으로 집단 지성 구현 |
+
+---
+
+### 🔧 개발 단계 및 기능별 릴리즈
+
+### ✅ **MVP 1**
+
+- [x]  온라인 글 스크래핑 기능
+- [x]  태그별 기록 분류 및 보기
+- [x]  로그인/회원가입 기능 (OAuth)
+
+### ✅ **MVP 2** (v0.1.0~)
+
+- [x]  모바일 화면 최적화 (Responsive UI)
+- [x]  커뮤니티 기능 (기록 공유 및 탐색)
+
+### 🔄 **MVP 3** *(개발 예정)*
+
+- [ ]  **크롬 익스텐션**으로 웹페이지 스크랩 기능
+- [ ]  **카카오 로그인** 연동
+- [x]  **마크다운 기반** 기록 작성 기능
 
 ---
 
 ## 🧱 기술 스택
 
-| 구분 | 기술 |
-|---|---|
+| **구분** | **기술 스택** |
+| --- | --- |
 | **Frontend** | Next.js, React, TypeScript, Tailwind CSS, SWR |
 | **Backend** | Next.js API Routes, Node.js, MongoDB |
 | **Database** | MongoDB Atlas, Mongoose |
 | **Scraping** | Cheerio, Open Graph Scraper, JSDOM |
 | **Authentication** | bcrypt, JSON Web Token (JWT) |
 | **Dev Tools** | ESLint, Prettier, TypeScript |
-
----
-
-## 🏁 시작하기
-
-### 1. 프로젝트 클론
-
-```bash
-git clone https://github.com/your-username/scraping.git
-cd scraping
-```
-
-### 2. 종속성 설치
-
-```bash
-npm install
-```
-
-### 3. 환경 변수 설정
-
-프로젝트 루트 디렉터리에 `.env.local` 파일을 생성하고 아래와 같이 환경 변수를 설정합니다.
-
-```env
-# MongoDB Connection URI
-MONGODB_URI="your_mongodb_connection_string"
-
-# JWT Secret Key
-JWT_SECRET="your_jwt_secret_key"
-
-# YouTube API Key (for YouTube scraping)
-YOUTUBE_API_KEY="your_youtube_api_key"
-```
-
-### 4. 개발 서버 실행
-
-```bash
-npm run dev
-```
-
-이제 브라우저에서 `http://localhost:3000`으로 접속하여 애플리케이션을 확인할 수 있습니다.
-
----
-
-## 🌐 API 엔드포인트
-
-| Method | Endpoint | 설명 |
-|---|---|---|
-| **Auth** | | |
-| `POST` | `/api/auth/register` | 신규 사용자 회원가입 |
-| `POST` | `/api/auth/login` | 사용자 로그인 |
-| `GET` | `/api/auth/me` | 현재 로그인된 사용자 정보 조회 |
-| **Article** | | |
-| `POST` | `/api/post-article` | URL을 스크랩하여 새 아티클 생성 |
-| `POST` | `/api/write` | 사용자가 직접 새 아티클 작성 |
-| `GET` | `/api/get-article` | 모든 아티클 목록 조회 |
-| `PUT` | `/api/modify-article` | 기존 아티클 정보 수정 |
-| `DELETE` | `/api/delete-article` | 아티클 삭제 |
-| **Metadata** | | |
-| `GET` | `/api/get-metadata` | URL에서 메타데이터(제목, 이미지 등) 추출 |
-| **Tag** | | |
-| `POST` | `/api/post-tag` | 새 태그 생성 |
-| `GET` | `/api/get-tag/[userId]` | 특정 사용자의 모든 태그 조회 |
-| `DELETE` | `/api/delete-tag` | 태그 삭제 |
-| **Like & Comment** | | |
-| `GET` | `/api/get-like` | 특정 아티클의 좋아요 및 댓글 목록 조회 |
-| `PATCH` | `/api/patch-like` | 아티클에 좋아요 또는 댓글 추가 |
-| `PATCH` | `/api/modify-like` | 댓글 내용 수정 |
-| `PATCH` | `/api/delete-like` | 아티클의 좋아요 또는 댓글 삭제 |
-| **User** | | |
-| `GET` | `/api/get-username` | 특�� 사용자 ID로 닉네임 조회 |

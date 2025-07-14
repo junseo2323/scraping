@@ -73,7 +73,7 @@ export default function ArticleEditor({ initialValue = ' ', initialTitle = ' ', 
     
     const saveFunction = async() => {
         if(editorRef.current) {
-            const content = editorRef.current.getMarkdown();
+            const content = editorRef.current.getInstance().getMarkdown();
 
             if(isModify){
                 const body = {
