@@ -1,6 +1,10 @@
-'use client';
+"use client";
+
 import dynamic from 'next/dynamic';
-import { Editor } from '@toast-ui/react-editor';
+const Editor = dynamic(() => import('@toast-ui/react-editor').then(mod => mod.Editor), {
+    ssr: false,
+});
+
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
 import React, { FormEventHandler, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
@@ -38,7 +42,7 @@ export default function ArticleEditor({ initialValue = ' ', initialTitle = ' ', 
     const router = useRouter();
     const { data } = useSWR(user?'/api/get-tag/' + user?._id:null, fetcher);
 
-    const editorRef = useRef<Editor>(null);
+    const editorRef = useRef<any>(null);
 
     const [previewStyle, setPreviewStyle] = useState<'vertical' | 'tab'>(
         typeof window !== 'undefined' && window.innerWidth > 900 ? 'vertical' : 'tab'
@@ -73,7 +77,7 @@ export default function ArticleEditor({ initialValue = ' ', initialTitle = ' ', 
     
     const saveFunction = async() => {
         if(editorRef.current) {
-            const content = editorRef.current.getInstance().getMarkdown();
+            const content = editorRef.current.getMarkdown();
 
             if(isModify){
                 const body = {

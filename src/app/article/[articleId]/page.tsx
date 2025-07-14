@@ -1,7 +1,9 @@
-'use client'
+"use client";
 
 import { useParams } from 'next/navigation';
-import { Viewer } from "@toast-ui/react-editor";
+import dynamic from "next/dynamic";
+const Viewer = dynamic(() => import("@toast-ui/react-editor").then(mod => mod.Viewer), { ssr: false });
+
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
@@ -11,6 +13,7 @@ import Modal from "react-modal"
 import useSWR from "swr";
 import Tag from '@/components/Tag';
 import { fetcher } from '@/utils/api';
+
 import ArticleEditor from '@/components/ArticleEditor';
 import Head from 'next/head';
 
@@ -190,6 +193,7 @@ export default function WritenArticle(){
             <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
                 <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                     <div className='w-full'>
+                        
                         <ArticleEditor 
                             initialValue = {content}
                             initialTitle = {title}
@@ -197,7 +201,7 @@ export default function WritenArticle(){
                             setIdModify = {setIsModify}
                             modifyTag = {tags}
                             modifyId = {articleId}
-                        />
+                            />
                     </div>
                 </div>
             </div>
@@ -238,7 +242,6 @@ export default function WritenArticle(){
             <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                 <div className='w-full'>
                     <Viewer
-                        
                         key={content}
                         ref={viewerRef}
                         initialValue={content}
