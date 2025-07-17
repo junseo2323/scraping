@@ -20,6 +20,7 @@ const config: Config = {
         'auto-fit': 'repeat(auto-fit, minmax(150px, 1fr))',
       },
       screens: {
+        'feed_sm': '495px',
         'feed_md': '900px',
         'feed_lg': '1100px',
         'feed_xl': '1280px',

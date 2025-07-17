@@ -7,6 +7,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Swal from 'sweetalert2';
 
 type RegisterFormInputs = {
     email: string,
@@ -22,18 +23,29 @@ export default function Register() {
     const {registerContext} = useAuth();
     const router = useRouter();
     const onSubmit:SubmitHandler<RegisterFormInputs> = async(data) => {
-        const res = await registerContext(
-            data.email,
-            data.password,
-            data.password2,
-            data.nickname,
-            data.subtitle,
-        );
-        if(res !== undefined){
-            setErrstate(String(res));
-        }else{
-            router.push('/login');
-        }
+            Swal.fire({
+                title: "회원가입 하시겠습니까?",
+                text: "당신의 노트를 만들어보세요!",
+                showCancelButton: true,
+                confirmButtonText: "가입하기",
+                cancelButtonText: `뒤로가기`
+              }).then(async (result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    const res = await registerContext(
+                        data.email,
+                        data.password,
+                        data.password2,
+                        data.nickname,
+                        data.subtitle,
+                    );
+                    if(res !== undefined){
+                        setErrstate(String(res));
+                    }else{
+                  router.push('/login');
+                  Swal.fire("회원가입이 완료되었습니다!", "당신의 기록으로 채워보세요!", "success");
+                } 
+              }});
     }
 
     return (
