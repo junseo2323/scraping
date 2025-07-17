@@ -1,6 +1,6 @@
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
-import {NextRequest} from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 
 interface RequestBody {
     type: string;
@@ -17,6 +17,8 @@ export async function PATCH(request: NextRequest) {
         const requestBody: RequestBody = await request.json();
         const {type,articleId,userId} = requestBody;
         const commentId = new ObjectId(requestBody.commentId);
+    
+
         let updateQuery = {};
 
         if(type === 'comment'){

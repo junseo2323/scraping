@@ -205,12 +205,12 @@ const CommentArticle: React.FC<CommentArticleType> = ({ iscommentmordal, setIsco
                                 >{i.commentText}</p>
                                 <div>
                                     <p className='text-sm select-none'>{usernames[i.userId]}</p>
-                                    <div className='grid grid-cols-2 w-20 select-none'>
+                                    {i.userId === user?._id && <div className='grid grid-cols-2 w-20 select-none'>
                                         <button
                                             onClick={() => { onDeleteHandle(i.commentId) }}
                                         >삭제</button>
                                         <ModifyModal comment={String(i.commentText)} commentId={String(i.commentId)} />
-                                    </div>
+                                    </div>}
                                 </div>
                             </div>
                         ))
