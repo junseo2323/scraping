@@ -9,7 +9,7 @@ import { useEffect, useState } from "react"
 const Navigation = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const {user,logout} = useAuth();
-    const path = usePathname();
+    const path = usePathname() ?? '';
 
     const hideOn = ["/login", "/register","/start"];
 
