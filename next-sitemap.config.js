@@ -3,6 +3,11 @@ module.exports = {
   siteUrl: 'https://jscraping.vercel.app',
   generateRobotsTxt: true,
   exclude: [],
+  robotsTxtOptions:{
+    additionalSitemaps: [
+      process.env.NEXT_PUBLIC_SCRAPING_URL+'/sitemap/article-sitemap.xml',
+    ]
+  },
   transform: async (config, path) => {
     return {
       loc: path,

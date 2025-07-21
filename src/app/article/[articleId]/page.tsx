@@ -460,10 +460,12 @@ const Comment: React.FC<CommentArticleType> = ({ articleId,comments, userId, ref
                             <div>
                                 <p className='text-sm select-none'>{usernames[i.userId]}</p>
                                 <div className='grid grid-cols-2 w-20 select-none'>
-                                    <button
-                                        onClick={() => { onDeleteHandle(i.commentId) }}
-                                    >삭제</button>
-                                    <ModifyModal comment={String(i.commentText)} commentId={String(i.commentId)} />
+                                    {i.userId === user?._id && <div className='grid grid-cols-2 w-20 select-none'>
+                                        <button
+                                            onClick={() => { onDeleteHandle(i.commentId) }}
+                                        >삭제</button>
+                                        <ModifyModal comment={String(i.commentText)} commentId={String(i.commentId)} />
+                                    </div>}
                                 </div>
                             </div>
                         </div>
