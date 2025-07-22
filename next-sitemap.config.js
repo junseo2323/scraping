@@ -5,7 +5,7 @@ module.exports = {
   exclude: [],
   robotsTxtOptions:{
     additionalSitemaps: [
-      process.env.NEXT_PUBLIC_SCRAPING_URL+'/sitemap/article-sitemap.xml',
+      process.env.NEXT_PUBLIC_SCRAPING_URL+'/article-sitemap.xml',
     ]
   },
   transform: async (config, path) => {
