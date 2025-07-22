@@ -1,3 +1,4 @@
+// 좋아요를 삭제하는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 import {NextRequest, NextResponse} from 'next/server';

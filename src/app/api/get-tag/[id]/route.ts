@@ -1,3 +1,4 @@
+// 유저의 태그를 가져오는 API
 import clientPromise from "@/utils/database";
 import { Tag } from "@/utils/schema";
 import { NextRequest } from "next/server";

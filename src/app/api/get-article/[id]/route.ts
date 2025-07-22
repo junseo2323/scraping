@@ -1,3 +1,4 @@
+// 특정 유저의 모든 게시글을 가져오는 API
 import clientPromise from "@/utils/database";
 import { NextRequest } from "next/server";
 

@@ -1,3 +1,4 @@
+// 테스트용 API
 import clientPromise from "@/utils/database";
 
 import { User } from "@/utils/schema";

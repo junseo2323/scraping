@@ -1,3 +1,4 @@
+// 모든 게시글을 가져오는 API
 import clientPromise from "@/utils/database";
 
 export async function GET(

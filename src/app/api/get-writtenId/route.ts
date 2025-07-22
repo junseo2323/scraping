@@ -1,3 +1,4 @@
+// 유저가 작성한 모든 게시물의 ID를 가져오는 API
 import clientPromise from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 

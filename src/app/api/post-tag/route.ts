@@ -1,3 +1,4 @@
+// 태그를 작성하는 API
 import clientPromise from "@/utils/database";
 
 import { Tag } from "@/utils/schema";

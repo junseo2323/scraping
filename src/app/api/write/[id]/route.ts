@@ -1,3 +1,4 @@
+// ID로 특정 게시글을 작성하는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 import { NextRequest,NextResponse } from "next/server";

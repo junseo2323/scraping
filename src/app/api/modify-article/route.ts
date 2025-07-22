@@ -1,3 +1,4 @@
+// 게시글을 수정하는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 

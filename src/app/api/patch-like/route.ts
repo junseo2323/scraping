@@ -1,3 +1,4 @@
+// 좋아요 상태를 업데이트하는 API
 import clientPromise from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 import { ObjectId } from "mongodb";

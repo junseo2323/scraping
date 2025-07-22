@@ -1,11 +1,17 @@
 import { ObjectId } from "mongodb";
 
+type TagToggleType = {
+    home : string[],
+    profile : string[]
+}
+
 export interface User {
     _id: string,
     password : string,
     name : string,
     subtitle : string,
-    article : Array<ObjectId>
+    article : Array<ObjectId>,
+    tagtoggle : TagToggleType
 } 
 
 export interface Tag {

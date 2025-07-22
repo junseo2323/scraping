@@ -1,3 +1,4 @@
+// 게시글을 삭제하는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 import { del } from '@vercel/blob';

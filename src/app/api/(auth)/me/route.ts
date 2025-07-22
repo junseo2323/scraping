@@ -1,4 +1,4 @@
-// app/api/me/route.ts
+// 내 정보를 가져오는 API
 import clientPromise from "@/utils/database";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongodb";

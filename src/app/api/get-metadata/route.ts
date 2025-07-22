@@ -1,3 +1,4 @@
+// URL의 메타데이터를 가져오는 API
 import { NextRequest, NextResponse } from "next/server"
 import { JSDOM } from 'jsdom'
 import axios from "axios"

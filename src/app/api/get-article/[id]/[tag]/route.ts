@@ -1,3 +1,4 @@
+// 특정 유저의 특정 태그가 달린 게시글들을 가져오는 API
 import clientPromise from "@/utils/database";
 import { NextRequest } from "next/server";
 

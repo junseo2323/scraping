@@ -1,3 +1,4 @@
+// 파일 업로드 API
 import { put } from '@vercel/blob'
 import { NextRequest, NextResponse } from 'next/server';
 

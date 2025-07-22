@@ -1,3 +1,4 @@
+// 좋아요 정보를 가져오는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 interface LikeDocument {

@@ -1,3 +1,4 @@
+// 특정 게시글의 ID를 가져오는 API
 import clientPromise from "@/utils/database";
 import { NextRequest, NextResponse } from "next/server";
 

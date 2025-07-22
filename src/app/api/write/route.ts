@@ -1,3 +1,4 @@
+// 게시글을 작성하는 API
 import { api } from "@/utils/api";
 import clientPromise from "@/utils/database";
 import axios from "axios";

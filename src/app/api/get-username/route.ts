@@ -1,3 +1,4 @@
+// 유저 이름을 가져오는 API
 import clientPromise from "@/utils/database";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";

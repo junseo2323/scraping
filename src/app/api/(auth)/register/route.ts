@@ -1,3 +1,4 @@
+// 회원가입 API
 import clientPromise from "@/utils/database";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
