@@ -11,10 +11,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/editor": "^3.1.0",
     "@toast-ui/editor-plugin-code-syntax-highlight": "^3.1.0",
     "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
-    "@toast-ui/react-editor": "^3.2.3",
     "@vercel/analytics": "^1.5.0",
     "@vercel/blob": "^1.1.1",
     "@vercel/speed-insights": "^1.2.0",
@@ -28,7 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.17.0",
     "mongoose": "^8.5.4",
-    "next": "^15.3.4",
+    "next": "^15.4.2",
     "next-sitemap": "^4.2.3",
     "open-graph-scraper": "^6.8.1",
     "patch-package": "^8.0.0",
