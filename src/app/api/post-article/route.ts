@@ -1,5 +1,5 @@
 // 게시글을 작성하는 API
-import { handleArticlePost } from "@/utils/articleUtils";
+import { handleArticlePost } from "@/lib/articleApiUtils";
 
 export async function POST(request: Request) {
     try {

@@ -1,7 +1,7 @@
 "use client";
 
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
+import { SimpleEditor } from '@/components/tiptap-templates/simple/simple-editor'
+
 import React, { FormEventHandler, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';

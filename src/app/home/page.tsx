@@ -30,7 +30,6 @@ export default function home() {
 
         try {
             const res = await fetchArticle(user?._id, tagname);
-            console.log(res);
             setTagArticlesMap(prev => ({ ...prev, [tagname]: res }));
         } catch (err) {
             console.error('에러발생');

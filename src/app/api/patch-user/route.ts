@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest) {
       { _id: new ObjectId(body.userId) }, // 필터
       updateQuery
     );
-    console.log(result);
+
     return NextResponse.json({ success: true, modifiedCount: result.modifiedCount });
   } catch (error) {
     console.error(error);

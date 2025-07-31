@@ -180,7 +180,7 @@ export const MCreateTag:React.FC<MCreateTagProps> = ({tag, tagdata, setTagdata})
 
     const tagGenerator = () => {
         let resultTag = []
-        console.log(tag);
+
         if(tagdata && Array.isArray(tag)){
             for (let tmptag of tagdata) {
                 if(tag && tag.includes(tmptag.tagname)){

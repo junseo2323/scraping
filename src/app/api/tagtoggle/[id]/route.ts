@@ -14,8 +14,8 @@ export async function GET(request: NextRequest) {
     const data = await db
       .collection("users")
       .findOne({ _id: new ObjectId(id) })
-    console.log(data?.tagtoggle.home)
-    return NextResponse.json({
+
+      return NextResponse.json({
         home : data?.tagtoggle.home,
         profile: data?.tagtoggle.profile
     })

@@ -62,11 +62,9 @@ export async function POST(req: NextRequest) {
         //tag 삭제
         const result = await db.collection('tags').deleteMany({userid:_id});
         delcount += result.deletedCount;
-        console.log(delcount);
 
         //user 정보 삭제
         const userres = await db.collection('users').deleteMany({_id:new ObjectId(_id)});
-        console.log(userres);
 
 
 

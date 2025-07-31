@@ -1,4 +1,6 @@
 import clientPromise from "@/utils/database";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 interface LikeDocument {
     articleId: string;

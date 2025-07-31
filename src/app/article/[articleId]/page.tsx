@@ -1,10 +1,6 @@
 "use client";
 
 import { useParams } from 'next/navigation';
-import dynamic from "next/dynamic";
-const ArticleViewer = dynamic(() => import("@/components/ArticleViewer"), 
-{ ssr: false });
-
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import '@toast-ui/editor/dist/toastui-editor.css'; // Editor's Style
@@ -14,12 +10,8 @@ import Modal from "react-modal"
 import useSWR from "swr";
 import Tag from '@/components/Tag';
 import { fetcher } from '@/utils/api';
-
-const ArticleEditor = dynamic(() => import("@/components/ArticleEditor"), 
-{ ssr: false });
-
-import Head from 'next/head';
-
+import { SimpleViwer } from '@/components/tiptap-templates/simple/simple-viewer';
+import { SimpleModify } from '@/components/tiptap-templates/simple/simple-modify';
 
 const likeFetcher = async (articleId: string, liker: string) => {
     try {
@@ -121,6 +113,7 @@ export default function WritenArticle(){
 
     useEffect(() => {
         const fetchData = async () => {
+            
             if (!articleId) return;
 
             // Fetch article data to get the article's internal ID
@@ -136,7 +129,7 @@ export default function WritenArticle(){
 
             // Process article details
             if (article) {
-                setImage(article.image);
+                setImage(article.images);
                 setContent(article.content);
                 setTitle(article.title);
                 fetchUsernames(article.writer);
@@ -170,11 +163,7 @@ export default function WritenArticle(){
 
     const { data: tagData } = useSWR(user?._id ? '/api/get-tag/' + user?._id : null, fetcher)
 
-    const viewerRef = useRef<any>(null);
-
     useEffect(()=>{
-        console.log(tagData);
-
         const tagGenerator = () => {
             if (!tagData || !tags) return;
             let resultTag = []
@@ -189,35 +178,27 @@ export default function WritenArticle(){
         const tmp = tagGenerator();
         setTagList(tmp);
     },[tagData, tags])
-
     return(
         isModify?
         <div>
             <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
                 <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                     <div className='w-full'>
-                        
-                        <ArticleEditor 
-                            initialValue = {content}
-                            initialTitle = {title}
-                            isModify = {true}
-                            setIdModify = {setIsModify}
-                            modifyTag = {tags}
-                            modifyId = {articleId}
+                        {
+                            <SimpleModify 
+                                content={content}
+                                initTitle={title}
+                                setIsModify={setIsModify}
+                                initImages={image}
+                                inittags={tags}
+                                articleId={articleId}                              
                             />
+                        }
                     </div>
                 </div>
             </div>
         </div>:
         <>
-        <Head>
-            <title>Scraping! - {title}</title>
-            <meta name="description" content={content} />
-            <meta name="robots" content="index, follow" />
-            <meta property="og:title" content={title} />
-            <meta property="og:description" content={content} />
-            <meta property="og:image" content={image?image[0]:''} />
-        </Head>
         <div className="mx-12 md:mx-auto grid gird-cols-[1fr_0.4fr_0.5fr_2fr] gap-5">
             <div>
                 <button onClick={onClickHandle}>좋아요 {likecount}</button>
@@ -244,10 +225,12 @@ export default function WritenArticle(){
             </div>
             <div className="w-full grid gird-rows-2 border-t-2 border-[#ffc456]">
                 <div className='w-full'>
-                    <ArticleViewer
+                    {
+                        content && 
+                        <SimpleViwer
                         content={content}
-                        editorRef={viewerRef}
-                    />
+                        />
+                    }
                 </div>
                 <div className='mr-10'>
                     <Comment
@@ -348,9 +331,6 @@ const Comment: React.FC<CommentArticleType> = ({ articleId,comments, userId, ref
                 userId: user?._id,
                 commentText: newComment
             }
-
-            console.log(body);
-
 
             try {
                 const res = await api.patch('/api/modify-like', body);

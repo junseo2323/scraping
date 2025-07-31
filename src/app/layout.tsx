@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { Noto_Sans } from 'next/font/google'
 import { Noto_Sans_KR } from 'next/font/google'
 
-import './globals.css';
+import '../styles/global.scss';
 import {AuthProvider} from '@/context/AuthContext'
 import Navigation from '@/components/Navigation'
 import { usePathname } from 'next/navigation'

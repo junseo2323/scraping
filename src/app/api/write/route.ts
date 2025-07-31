@@ -3,7 +3,7 @@ import { api } from "@/utils/api";
 import clientPromise from "@/utils/database";
 import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
-import { handleArticlePost } from "@/utils/articleUtils";
+import { handleArticlePost } from "@/lib/articleApiUtils";
 
 
 export async function POST(request: NextRequest) {

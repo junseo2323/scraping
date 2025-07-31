@@ -13,8 +13,8 @@ import { fetcher } from "@/utils/api";
 import { useRouter } from "next/navigation";
 import {createArticleData,articleData} from "@/types/type";
 import dynamic from 'next/dynamic';
+import { SimpleEditor } from "@/components/tiptap-templates/simple/simple-editor";
 
-const ArticleEditor = dynamic(() => import('@/components/ArticleEditor'), { ssr: false });
 
 //Type
 type Inputs = {
@@ -83,7 +83,7 @@ const Write: React.FC<WriteTypeProps> = () => {
         <div>
             <p className="font-black text-3xl">새로운 기록물 만들기</p>
             <p className="font-light text-sm pt-1">어떻게 해야할지 모르겠어요</p>
-            <ArticleEditor initialValue=''/>
+            <SimpleEditor />
         </div>
     )
 }

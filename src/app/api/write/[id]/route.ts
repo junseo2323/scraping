@@ -4,6 +4,7 @@ import { ObjectId } from "mongodb";
 import { NextRequest,NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+  
   const url = request.nextUrl;
   const pathSegments = url.pathname.split("/");
   const id = pathSegments[pathSegments.length - 1]; // 마지막 segment가 [id]
@@ -44,9 +45,10 @@ export async function POST(request: NextRequest){
       title,content,images,tags
     };
 
-    const result = await db.collection('write').updateOne(
+    const result = await db.collection('write').findOneAndUpdate(
       { _id: new ObjectId(id) },
-      { $set: dataToUpdate }
+      { $set: dataToUpdate },
+      { returnDocument: 'after'}
     );
 
     return NextResponse.json(result, {status: 200 });

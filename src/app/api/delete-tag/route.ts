@@ -18,7 +18,7 @@ export async function DELETE(request: Request) {
 
         // Delete the document with the specified tagname
         const result = await db.collection<Tag>('tags').deleteOne({ tagname,userid });
-        console.log(result);
+
         if (result.deletedCount === 0) {
             return new Response('No document found with the specified tagname.', { status: 404 });
         }

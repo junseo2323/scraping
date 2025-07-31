@@ -1,0 +1,39 @@
+/* styles/globals.scss */
+@use './variables' as *;
+@use './keyframe-animations' as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'NotoSansKR';
+    src: url('/fonts/NotoSansKR-VariableFont_wght.ttf') format('ttf');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    font-family: 'NotoSansKR', sans-serif;
+}
+
+@media (min-width: 768px){
+    .toastui-editor-contents p {
+        font-size: 16px !important;
+    }
+
+    .toastui-editor-contents h1 {
+        font-size: 48px !important;
+        line-height: 48px !important;
+        border-bottom: 0 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .toastui-editor-contents h2 {
+        font-size: 32px !important;
+        border-bottom: 0 !important;
+        margin-bottom: 1rem !important;
+    }
+}
+
