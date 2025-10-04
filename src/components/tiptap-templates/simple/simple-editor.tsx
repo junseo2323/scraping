@@ -21,6 +21,8 @@ import { Highlight } from "@tiptap/extension-highlight"
 import { Subscript } from "@tiptap/extension-subscript"
 import { Superscript } from "@tiptap/extension-superscript"
 import { Selection } from "@tiptap/extensions"
+import { TableKit } from '@tiptap/extension-table'
+
 
 // --- UI Primitives ---
 import { Button } from "@/components/tiptap-ui-primitive/button"
@@ -30,6 +32,22 @@ import {
   ToolbarGroup,
   ToolbarSeparator,
 } from "@/components/tiptap-ui-primitive/toolbar"
+import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
+import {all, createLowlight} from 'lowlight'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+import python from 'highlight.js/lib/languages/python'
+
+const lowlight = createLowlight(all);
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('js', js);
+lowlight.register('ts', ts);
+lowlight.register('python', python);
+
+
 
 // --- Tiptap Node ---
 import { ImageUploadNode } from "@/components/tiptap-node/image-upload-node/image-upload-node-extension"
@@ -82,6 +100,21 @@ import { handleImageUpload, MAX_FILE_SIZE } from "@/lib/tiptap-utils"
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
 
+const TableInsertButton = () => {
+  const { editor } = React.useContext(EditorContext)
+  if (!editor) return null
+
+  return (
+    <Button
+      onClick={() => {
+        editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()
+      }}
+    >
+      표 삽입
+    </Button>
+  )
+}
+
 const MainToolbarContent = ({
   onHighlighterClick,
   onLinkClick,
@@ -96,6 +129,7 @@ const MainToolbarContent = ({
       <Spacer />
 
       <ToolbarGroup>
+        <TableInsertButton />
         <UndoRedoButton action="undo" />
         <UndoRedoButton action="redo" />
       </ToolbarGroup>
@@ -231,6 +265,10 @@ export function SimpleEditor() {
           openOnClick: false,
           enableClickSelection: true,
         },
+        codeBlock: false,
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
       HorizontalRule,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
@@ -251,6 +289,7 @@ export function SimpleEditor() {
         },
         onError: (error) => console.error("Upload failed:", error),
       }),
+      TableKit
     ],
   })
 

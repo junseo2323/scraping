@@ -61,6 +61,20 @@ import {
 import { MarkButton } from "@/components/tiptap-ui/mark-button"
 import { TextAlignButton } from "@/components/tiptap-ui/text-align-button"
 import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button"
+import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
+import {all, createLowlight} from 'lowlight'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+import python from 'highlight.js/lib/languages/python'
+
+const lowlight = createLowlight(all);
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('js', js);
+lowlight.register('ts', ts);
+lowlight.register('python', python);
 
 // --- Icons ---
 import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon"
@@ -241,7 +255,11 @@ export function SimpleModify(modifybody:ModifyBodyType) {
           openOnClick: false,
           enableClickSelection: true,
         },
+        codeBlock: false,
       }),
+      CodeBlockLowlight.configure({
+        lowlight,
+      }),      
       HorizontalRule,
       TextAlign.configure({ types: ["heading", "paragraph"] }),
       TaskList,

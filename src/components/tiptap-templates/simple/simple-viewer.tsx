@@ -35,35 +35,23 @@ import "@/components/tiptap-node/heading-node/heading-node.scss"
 import "@/components/tiptap-node/paragraph-node/paragraph-node.scss"
 
 // --- Tiptap UI ---
-import { HeadingDropdownMenu } from "@/components/tiptap-ui/heading-dropdown-menu"
-import { ImageUploadButton } from "@/components/tiptap-ui/image-upload-button"
-import { ListDropdownMenu } from "@/components/tiptap-ui/list-dropdown-menu"
-import { BlockquoteButton } from "@/components/tiptap-ui/blockquote-button"
-import { CodeBlockButton } from "@/components/tiptap-ui/code-block-button"
-import {
-  ColorHighlightPopover,
-  ColorHighlightPopoverContent,
-  ColorHighlightPopoverButton,
-} from "@/components/tiptap-ui/color-highlight-popover"
-import {
-  LinkPopover,
-  LinkContent,
-  LinkButton,
-} from "@/components/tiptap-ui/link-popover"
-import { MarkButton } from "@/components/tiptap-ui/mark-button"
-import { TextAlignButton } from "@/components/tiptap-ui/text-align-button"
-import { UndoRedoButton } from "@/components/tiptap-ui/undo-redo-button"
+import { CodeBlockLowlight } from '@tiptap/extension-code-block-lowlight'
+import {all, createLowlight} from 'lowlight'
+import css from 'highlight.js/lib/languages/css'
+import js from 'highlight.js/lib/languages/javascript'
+import ts from 'highlight.js/lib/languages/typescript'
+import html from 'highlight.js/lib/languages/xml'
+import python from 'highlight.js/lib/languages/python'
 
-// --- Icons ---
-import { ArrowLeftIcon } from "@/components/tiptap-icons/arrow-left-icon"
-import { HighlighterIcon } from "@/components/tiptap-icons/highlighter-icon"
-import { LinkIcon } from "@/components/tiptap-icons/link-icon"
+const lowlight = createLowlight(all);
+lowlight.register('html', html);
+lowlight.register('css', css);
+lowlight.register('js', js);
+lowlight.register('ts', ts);
+lowlight.register('python', python);
 
 // --- Hooks ---
 import { useIsMobile } from "@/hooks/use-mobile"
-import { useWindowSize } from "@/hooks/use-window-size"
-import { useCursorVisibility } from "@/hooks/use-cursor-visibility"
-import { useScrolling } from "@/hooks/use-scrolling"
 
 // --- Styles ---
 import "@/components/tiptap-templates/simple/simple-editor.scss"
@@ -99,6 +87,10 @@ export const SimpleViwer: React.FC<ViewerProps> = ({content}) => {
           openOnClick: false,
           enableClickSelection: true,
         },
+        codeBlock: false,
+      }),
+      CodeBlockLowlight.configure({
+        lowlight,
       }),
       HorizontalRule,
       TextAlign.configure({ types: ["heading", "paragraph"] }),

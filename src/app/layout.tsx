@@ -44,6 +44,7 @@ export default function RootLayout({
     return (
         <html lang="en" style={{ overflowX: 'hidden' }}>
             <head>
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
                 <link rel="manifest" href="/manifest.json" />
                 <meta name="google-site-verification" content="lVeoww_Qsl09sLaSLcUP2h7_O_1HdFGEmDXCy2jVAZI" />
             </head>
